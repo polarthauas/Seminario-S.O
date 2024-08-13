@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Arquivos de Origem">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Arquivos de Recurso">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Arquivos de Origem\Gui">
+      <UniqueIdentifier>{4b6b4b1f-5107-4a82-8964-f722564ae314}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho\Gui">
+      <UniqueIdentifier>{efb19d85-1b6a-483a-ba8e-5989657bc996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho\Gui\Quest">
+      <UniqueIdentifier>{02d148b4-3025-45e1-b871-e8b3bcf3785c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Origem\Gui\Message">
+      <UniqueIdentifier>{eeed66b1-50a0-4e59-9733-d9ddfe59980f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Origem\Core">
+      <UniqueIdentifier>{606a944f-dace-4280-b4ea-cc96f5771f2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho\Core">
+      <UniqueIdentifier>{49676731-bf8c-4be1-9211-3112947b8057}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="Douglas.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="Fases.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Arquivos de Origem\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Arquivos de Origem\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageManager.cpp">
+      <Filter>Arquivos de Origem\Gui\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="Notepad.cpp">
+      <Filter>Arquivos de Origem\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestManager.cpp">
+      <Filter>Arquivos de Origem\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="Computer.cpp">
+      <Filter>Arquivos de Origem\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Arquivos de Origem\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Arquivos de Origem\Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Globals.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="Douglas.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="Fases.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Arquivos de Cabeçalho\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Arquivos de Cabeçalho\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Notepad.h">
+      <Filter>Arquivos de Cabeçalho\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestManager.h">
+      <Filter>Arquivos de Cabeçalho\Gui\Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="Quest.h">
+      <Filter>Arquivos de Cabeçalho\Gui\Quest</Filter>
+    </ClInclude>
+    <ClInclude Include="Computer.h">
+      <Filter>Arquivos de Cabeçalho\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Arquivos de Cabeçalho\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageManager.h">
+      <Filter>Arquivos de Cabeçalho\Gui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Textures.xml" />
+  </ItemGroup>
+</Project>
