@@ -26,6 +26,8 @@ bool Game::Init(const char* title, int width, int height) {
 		return false;
 	}
 
+	TTF_Init();
+
 	m_Window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
 
 	if (m_Window == nullptr) {
@@ -87,7 +89,8 @@ void Game::cleanUp() {
 	}
 
 	Mix_CloseAudio();
-
+	TTF_Quit();
+	IMG_Quit();
 	SDL_Quit();
 }
 

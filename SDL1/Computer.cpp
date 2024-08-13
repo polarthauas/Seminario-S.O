@@ -15,18 +15,27 @@ Computer::Computer(SDL_Renderer* rend)
 	screenListaAfaz = { (printRect.x + printRect.w) / 2, (printRect.y + printRect.h) / 4, 448, 499 };
 
 	ParseXML();
-	LoadTexture();
+
+	// Carrega as primeiras texturas
+	_LoadTexture();
 }
 
-void Computer::LoadTexture() {
+void Computer::_LoadTexture() {
+
+	// Calcula a variação altX e altY por causa do tamanho da tela
+	// [DEPRECATED]
+
 	int altX = calcAlterWindowSize(20, 'w');
 	int altY = calcAlterWindowSize(20, 'h');
 
+	// Destrói e limpa as texturas para serem colocadas novas
 	for (auto& p : m_Textures) {
 		SDL_DestroyTexture(p.Tex);
 	}
 
 	m_Textures.clear();
+
+	// Alerta: MUITOS IF ELSE
 
 	if (m_ComputerState == "WORKSPACE1") {
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WORKSPACE1"].c_str()), printRect);
@@ -85,45 +94,48 @@ void Computer::LoadTexture() {
 	else if (m_ComputerState == "PROTECAO_CONTAS_MENU") {
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["PROTECAO_CONTAS_MENU"].c_str()), printRect);
 	}
-
+	// UFA! Finalmente acabou esses IF ELSE :)
 }
 
 void Computer::LoadNewScreen()
 {
-	LoadTexture();
-	LoadButtons();
-	LoadNew = false;
+	_LoadTexture();
+	_LoadButtons();
+	//Foi carregado
+	_LoadNewScreen = false;
 }
 
-void Computer::LoadButtons()
+void Computer::_LoadButtons()
 {
-	for (auto it = m_ButtonsMap.begin(); it != m_ButtonsMap.end(); ) {
-		delete it->second;
-		it = m_ButtonsMap.erase(it);
+	// Deleta e limpa os botõpes
+	for (auto& b : m_ButtonsMap ) {
+		delete b.second;
 	}
 
 	m_ButtonsMap.clear();
 	
 	int alt = calcAlterWindowSize(20, 'w');
+	
+	// ALERTA: MUITOS IF E ELSE
 
 	if (m_ComputerState == "WORKSPACE2") {
 		m_ButtonsMap["LixeiraEnter"] = new Button(alt, alt, 75, 75, [this]() {
-			inLixeira = true; 
+			_inLixeira = true; 
 		});
 
 		m_ButtonsMap["NotePadEnter"] = new Button(alt + 150, alt, 75, 75, [this]() {
-			inListaAfazeres = true;
+			_inListaAfazeres = true;
 			m_Notepad = std::make_unique<Notepad>(screenListaAfaz);
 			m_Notepad->SetIsTyping(true);
 		});
 
 		m_ButtonsMap["SettingsEnter"] = new Button(alt, alt + 80, 75, 75, [this]() {
-			inLixeira = false;
+			_inLixeira = false;
 			setState("INSETTINGS1");
 		});
 
 		m_ButtonsMap["SecretEnter"] = new Button(alt + 75, alt, 75, 75, [this]() {
-			inSecretPasta = true;
+			_inSecretPasta = true;
 		});
 
 	}
@@ -167,9 +179,13 @@ void Computer::LoadButtons()
 			setState("WORKSPACE2");
 		});
 	}
+
+	// Cabooo :)
 }
 
-void Computer::MouseInComputer() {
+void Computer::_MouseInComputer() {
+	// Verificador simples
+
 	int x;
 	int y;
 
@@ -184,6 +200,8 @@ void Computer::MouseInComputer() {
 	}
 }
 
+// Renderizadores:
+
 void Computer::RenderTextures() {
 	for (auto& p : m_Textures) {
 
@@ -197,34 +215,50 @@ void Computer::RenderTextures() {
 		}
 
 	}
-	if (inListaAfazeres) RenderNotePad();
 
-	SDL_SetRenderDrawColor(m_Rend, 255, 255, 255, 255);
+	if (_inListaAfazeres) RenderNotePad();
 
-	for (auto& b : m_ButtonsMap) {
-		b.second->Draw(m_Rend);
-	}
+	DrawButtons();
 
-	if (LoadNew) {
+	if (_LoadNewScreen) {
 		LoadNewScreen();
 	}
-
 }
 
+// Cria a moldura do pc (a borda)
 void Computer::RenderMoldure() {
 	SDL_SetRenderDrawColor(m_Rend, 192, 192, 192, 255);
 	SDL_Rect backgroundRect = { 0, 0, windowWidth, windowHeight };
 	SDL_RenderFillRect(m_Rend, &backgroundRect);
 }
 
+// Renderizador geral
 void Computer::Render() {
-	if (m_ComputerState == "INSETTINGS1")SDL_Log("Render iniciado");
 	RenderMoldure();
 	RenderTextures();
-
 }
 
-void Computer::MouseWhell(const SDL_Event& e) {
+void Computer::RenderNotePad(){
+	SDL_Rect auxRect = m_Notepad->getRect();
+
+	if (!m_ButtonsMap["NotePadExit"]) {
+		m_ButtonsMap["NotePadExit"] = new Button(auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20, [this]() {
+		_inListaAfazeres = false;
+		m_Notepad.reset();		
+	});
+
+	}else {
+		m_ButtonsMap["NotePadExit"]->SetPosition(auxRect.x + auxRect.w - 20, auxRect.y + 5);
+	}
+	
+	m_Notepad->Render(m_Rend, { auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20 });
+}
+
+// Eventos:
+
+
+// Gerencia o Comportamento do Scroll do Mouse
+void Computer::_MouseWhell(const SDL_Event& e) {
 	if (e.type == SDL_MOUSEWHEEL) {
 		for (auto& p : m_Textures) {
 			if (p.Scroll) {
@@ -243,10 +277,10 @@ void Computer::MouseWhell(const SDL_Event& e) {
 }
 
 void Computer::Events(const SDL_Event& e) {
-	MouseInComputer();
+	_MouseInComputer();
 
 	// Lista de Afazeres dhr
-	if (inListaAfazeres) {
+	if (_inListaAfazeres) {
 		m_Notepad->Events(e);
 	}
 	
@@ -259,8 +293,10 @@ void Computer::Events(const SDL_Event& e) {
 	
 	if (m_ComputerState == "INSETTINGS1") { SDL_Log("Ok, ta indo (depois)"); }
 	
-	MouseWhell(e);
+	_MouseWhell(e);
 }
+
+// O parse do XML
 
 void Computer::ParseXML()
 {
@@ -283,18 +319,3 @@ void Computer::ParseXML()
 	}
 }
 
-void Computer::RenderNotePad(){
-	SDL_Rect auxRect = m_Notepad->getRect();
-
-	if (!m_ButtonsMap["NotePadExit"]) {
-		m_ButtonsMap["NotePadExit"] = new Button(auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20, [this]() {
-		inListaAfazeres = false;
-		m_Notepad.reset();		
-	});
-
-	}else {
-		m_ButtonsMap["NotePadExit"]->SetPosition(auxRect.x + auxRect.w - 20, auxRect.y + 5);
-	}
-
-	m_Notepad->Render(m_Rend, { auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20 });
-}

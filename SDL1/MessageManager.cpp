@@ -7,14 +7,11 @@
 MessageManager::MessageManager()
 	: font(nullptr)
 {
-	TTF_Init();
 }
 
 MessageManager::~MessageManager()
 {
 	if (font) TTF_CloseFont(font);
-
-	TTF_Quit();
 }
 
 void MessageManager::setFont(const std::string& fontPath, int fontSize)

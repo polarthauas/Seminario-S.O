@@ -1,3 +1,16 @@
+/*
+	Feito by ME
+
+	Admnistra o Computador:
+		Carrega as texturas
+		Cria os Botões do PC
+		Encarrega-se da lógica principal do PC
+
+
+	Cara, isso ta dando muito trabalho sksks
+*/
+
+
 #pragma once
 
 #include "Notepad.h"
@@ -28,6 +41,7 @@ struct PrintTexture {
 		ScrollMax = MaxY - srcRect.h;
 	}
 
+	// Atributos padrão dos Print
 	SDL_Rect srcRect;
 	SDL_Rect dstRect;
 	SDL_Texture* Tex;
@@ -47,22 +61,53 @@ struct PrintTexture {
 class Computer
 {
 public:
+	/*
+	* 
+	* Carrega o caminho das texturas do XML
+	* 
+	* Carrega a primeira textura (workspace1)
+	* 
+	* @param rend - SDL_Renderer, para ele conseguir renderizar coisa na tela
+	* 
+	* @return this
+	*/
 	Computer(SDL_Renderer* rend);
 
+	// Função Renderizadora principal
 	void Render();
-	
-	void setState(const std::string& newState) {
+
+	// Inline Functions
+
+	/*
+	* 
+	* Seta o Estado do computador
+	* 
+	* OBS: O Estado precisa ser VÁLIDO, e precisa estar implementado
+	* 
+	* @param newState - Define um novo estado
+	* 
+	*/
+	inline void setState(const std::string& newState) {
 		m_ComputerState = newState;
-		LoadNew = true;
+		_LoadNewScreen = true;
 	};
-
-	std::string getState() const { return m_ComputerState; };
-
+	
+	inline std::string getState() const {
+		return m_ComputerState;
+	}
+	
+	/*
+	* Gerenciador principal de eventos do PC
+	* 
+	* Chama outros métodos de events
+	* 
+	*/
 	void Events(const SDL_Event& e);
 
 private:
+	// Essa classe usa muito o Renderer, então ele se torna um atributo para facilitar
 	SDL_Renderer* m_Rend;
-	
+
 	SDL_Rect printRect;
 	SDL_Rect screenListaAfaz;
 
@@ -75,25 +120,58 @@ private:
 
 	void ParseXML();
 
+	// Renderizadores
 	void RenderNotePad();
 	void RenderTextures();
 	void RenderMoldure();
 
-	void LoadButtons();
-	void LoadTexture();
-	void LoadNewScreen();
+	inline void DrawButtons() {
+		SDL_SetRenderDrawColor(m_Rend, 255, 255, 255, 255);
+		for (auto& b : m_ButtonsMap) {
+			b.second->Draw(m_Rend);
+		}
+	}
 	
-	void MouseInComputer();
-	void MouseWhell(const SDL_Event& e);
+	// Funções de carregamento
+	// Apenas deletam o que tinha e carregam o novo
 
-	bool inLixeira = false;
-	bool inSecretPasta = false;
-	bool inListaAfazeres = false;
+
+	void _LoadButtons();
+	void _LoadTexture();
 	
-	bool LoadNew = false;
+	// Chama o LoadButtons e LoadTexture
+	void LoadNewScreen();
+
+	// Funções de evento
+
+	// Verifica se o mouse está dentro da area do pc, se não estiver ele não estará visível
+	void _MouseInComputer();
+	
+	/*
+	* 
+	* Gerencia o Scroll do Mouse
+	* 
+	* @param e - SDL_Event, é meio óbvio para que serve isso né
+	* 
+	*/
+	void _MouseWhell(const SDL_Event& e);
+	
+	// Variáveis de controle das janelas secundárias da WORKSPACE2
+	bool _inLixeira{ false };
+	bool _inSecretPasta{ false };
+	bool _inListaAfazeres{ false };
+
+	// Os botões estavam se deletando, então tive que adicionar essa variavel de controle para poder
+	// fazer eles serem deletados só depois
+
+	bool _LoadNewScreen{ false };
 
 	int m_ScrollControl{ 0 };
 
+	// Ponteiros inteligentes
+
 	std::unique_ptr<Notepad> m_Notepad;
-	std::unique_ptr<MessageManager> msgManager;
+
+	// É o que exibe as mensagens na tela
+	std::unique_ptr<MessageManager> m_MsgManager;
 };
