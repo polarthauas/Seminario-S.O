@@ -6,7 +6,8 @@ Button::Button(int x, int y, int width, int height, const std::function<void()>&
 	: m_Tex(tex), m_OnClick(onClick)
 {
 	// Ajusta conforme a resolução :)
-	m_ButtonRect = { calcAlterWindowSize(x, 'w'), calcAlterWindowSize(y, 'h'), calcAlterWindowSize(width, 'w'), calcAlterWindowSize(height, 'h')};
+	m_ButtonRect = { calcAlterWindowSize(x, 'w'), calcAlterWindowSize(y, 'h'), calcAlterWindowSize(width, 'w'), calcAlterWindowSize(height, 'h') };
+	m_OriginRect = m_ButtonRect;
 }
 
 void Button::Update(const SDL_Event& e)
@@ -22,7 +23,7 @@ void Button::Update(const SDL_Event& e)
 		m_IsClicked = false;
 		return;
 	}
-	
+
 	if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
 		m_IsClicked = true;
 	}
@@ -43,6 +44,8 @@ void Button::Draw(SDL_Renderer* rend)
 	else {
 		SDL_RenderDrawRect(rend, &m_ButtonRect);
 	}
-
 }
 
+void Button::ResetPosition() {
+	m_ButtonRect = m_OriginRect;
+}

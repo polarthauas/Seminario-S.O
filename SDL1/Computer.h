@@ -24,7 +24,6 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
-#include <SDL_mixer.h>
 
 // Esses negócio grande ai
 using ButtonsMap = std::map<std::string, Button*, std::less<>>;
@@ -89,7 +88,7 @@ public:
 	*/
 	inline void setState(const std::string& newState) {
 		m_ComputerState = newState;
-		_LoadNewScreen = true;
+		m_LoadNewScreen = true;
 	};
 	
 	inline std::string getState() const {
@@ -115,20 +114,26 @@ private:
 
 	std::vector<PrintTexture> m_Textures;
 
-	ButtonsMap m_ButtonsMap;
+	ButtonsMap m_ButtonsPtrMap;
 	FilePrintMap m_PrintsMap;
 
 	void ParseXML();
 
 	// Renderizadores
 	void RenderNotePad();
-	void RenderTextures();
-	void RenderMoldure();
+	void m_RenderTextures();
+	void m_RenderMoldure();
 
 	inline void DrawButtons() {
 		SDL_SetRenderDrawColor(m_Rend, 255, 255, 255, 255);
-		for (auto& b : m_ButtonsMap) {
+		for (auto& b : m_ButtonsPtrMap) {
 			b.second->Draw(m_Rend);
+		}
+	}
+
+	inline void m_UpdateButtons(const SDL_Event& e) {
+		for (auto& b : m_ButtonsPtrMap) {
+			b.second->Update(e);
 		}
 	}
 	
@@ -136,8 +141,10 @@ private:
 	// Apenas deletam o que tinha e carregam o novo
 
 
-	void _LoadButtons();
-	void _LoadTexture();
+	void m_CleanButtonMap();
+
+	void m_LoadButtons();
+	void m_LoadTexture();
 	
 	// Chama o LoadButtons e LoadTexture
 	void LoadNewScreen();
@@ -145,7 +152,7 @@ private:
 	// Funções de evento
 
 	// Verifica se o mouse está dentro da area do pc, se não estiver ele não estará visível
-	void _MouseInComputer();
+	void m_MouseInComputer();
 	
 	/*
 	* 
@@ -154,17 +161,19 @@ private:
 	* @param e - SDL_Event, é meio óbvio para que serve isso né
 	* 
 	*/
-	void _MouseWhell(const SDL_Event& e);
+	void m_MouseWhell(const SDL_Event& e);
+
+	void m_UpdtDinamicBtsState();
 	
 	// Variáveis de controle das janelas secundárias da WORKSPACE2
-	bool _inLixeira{ false };
-	bool _inSecretPasta{ false };
-	bool _inListaAfazeres{ false };
+	bool m_inLixeira{ false };
+	bool m_inSecretPasta{ false };
+	bool m_inListaAfazeres{ false };
 
 	// Os botões estavam se deletando, então tive que adicionar essa variavel de controle para poder
 	// fazer eles serem deletados só depois
 
-	bool _LoadNewScreen{ false };
+	bool m_LoadNewScreen{ false };
 
 	int m_ScrollControl{ 0 };
 

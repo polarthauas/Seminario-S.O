@@ -17,10 +17,10 @@ Computer::Computer(SDL_Renderer* rend)
 	ParseXML();
 
 	// Carrega as primeiras texturas
-	_LoadTexture();
+	m_LoadTexture();
 }
 
-void Computer::_LoadTexture() {
+void Computer::m_LoadTexture() {
 
 	// Calcula a variação altX e altY por causa do tamanho da tela
 	// [DEPRECATED]
@@ -85,8 +85,8 @@ void Computer::_LoadTexture() {
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INWINDOWSFIREWALL1"].c_str()), rectPrint, srcPrint, true, 1080);
 
 	}
-	else if (m_ComputerState == "RANSOMWER_MENU") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["RANSOMWER_MENU"].c_str()), printRect);
+	else if (m_ComputerState == "RANSOMWERE_MENU") {
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["RANSOMWERE_MENU"].c_str()), printRect);
 	}
 	else if (m_ComputerState == "SEGURANCA_DISPOSITIVO_MENU") {
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["SEGURANCA_DISPOSITIVO_MENU"].c_str()), printRect);
@@ -99,43 +99,48 @@ void Computer::_LoadTexture() {
 
 void Computer::LoadNewScreen()
 {
-	_LoadTexture();
-	_LoadButtons();
+	m_LoadTexture();
+	m_LoadButtons();
+
 	//Foi carregado
-	_LoadNewScreen = false;
+	m_LoadNewScreen = false;
 }
 
-void Computer::_LoadButtons()
-{
-	// Deleta e limpa os botõpes
-	for (auto& b : m_ButtonsMap ) {
+
+void Computer::m_CleanButtonMap() {
+	for (auto& b : m_ButtonsPtrMap) {
 		delete b.second;
 	}
 
-	m_ButtonsMap.clear();
-	
+	m_ButtonsPtrMap.clear();
+}
+
+void Computer::m_LoadButtons()
+{
+	m_CleanButtonMap();
+
 	int alt = calcAlterWindowSize(20, 'w');
 	
 	// ALERTA: MUITOS IF E ELSE
 
 	if (m_ComputerState == "WORKSPACE2") {
-		m_ButtonsMap["LixeiraEnter"] = new Button(alt, alt, 75, 75, [this]() {
-			_inLixeira = true; 
+		m_ButtonsPtrMap["LixeiraEnter"] = new Button(alt, alt, 75, 75, [this]() {
+			m_inLixeira = true; 
 		});
 
-		m_ButtonsMap["NotePadEnter"] = new Button(alt + 150, alt, 75, 75, [this]() {
-			_inListaAfazeres = true;
+		m_ButtonsPtrMap["NotePadEnter"] = new Button(alt + 150, alt, 75, 75, [this]() {
+			m_inListaAfazeres = true;
 			m_Notepad = std::make_unique<Notepad>(screenListaAfaz);
 			m_Notepad->SetIsTyping(true);
 		});
 
-		m_ButtonsMap["SettingsEnter"] = new Button(alt, alt + 80, 75, 75, [this]() {
-			_inLixeira = false;
+		m_ButtonsPtrMap["SettingsEnter"] = new Button(alt, alt + 80, 75, 75, [this]() {
+			m_inLixeira = false;
 			setState("INSETTINGS1");
 		});
 
-		m_ButtonsMap["SecretEnter"] = new Button(alt + 75, alt, 75, 75, [this]() {
-			_inSecretPasta = true;
+		m_ButtonsPtrMap["SecretEnter"] = new Button(alt + 75, alt, 75, 75, [this]() {
+			m_inSecretPasta = true;
 		});
 
 	}
@@ -144,67 +149,59 @@ void Computer::_LoadButtons()
 	}
 
 	else if (m_ComputerState == "INSETTINGS1") {
-		m_ButtonsMap["WINDOWSDEFENDER_ENTER"] = new Button(printRect.x + 320, 155, 970, 65, [this]() {
+		m_ButtonsPtrMap["WINDOWSDEFENDER_ENTER"] = new Button(printRect.x + 320, 155, 970, 65, [this]() {
 			setState("INWINDOWSDEFENDER1");
 		});
 
-		m_ButtonsMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
+		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
 			setState("WORKSPACE2");
 		});
 	}
 	else if (m_ComputerState == "INWINDOWSDEFENDER1") {
-		m_ButtonsMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
+		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
 			setState("WORKSPACE2");
 		});
 
-		m_ButtonsMap["INWINDOWSDEFENDERVRIUS1_ENTER"] = new Button(printRect.x + 350, 220, 230, 290, [this]() {
+		m_ButtonsPtrMap["INWINDOWSDEFENDERVRIUS1_ENTER"] = new Button(printRect.x + 350, 220, 230, 290, [this]() {
 			setState("INWINDOWSDEFENDERVIRUS1");
+	
 		});
 
-		m_ButtonsMap["INWINDOWSFIREWALL1_ENTER"] = new Button(printRect.x + 830, 230, 220, 275, [this]() {
+		m_ButtonsPtrMap["INWINDOWSFIREWALL1_ENTER"] = new Button(printRect.x + 830, 230, 220, 275, [this]() {
 			setState("INWINDOWSFIREWALL1");
 		});
 
-		m_ButtonsMap["PROTECAO_CONTAS_ENTER"] = new Button(printRect.x + 585, 230, 220, 275, [this]() {
+		m_ButtonsPtrMap["PROTECAO_CONTAS_ENTER"] = new Button(printRect.x + 585, 230, 220, 275, [this]() {
 			setState("PROTECAO_CONTAS_MENU");
 		});
 	}
 	else if (m_ComputerState == "INWINDOWSDEFENDERVIRUS1") {
-		m_ButtonsMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
+		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
 			setState("WORKSPACE2");
+		});
+
+		m_ButtonsPtrMap["RANSOMWERE_ENTER"] = new Button(450, 1000, 500, 20, [this]() {
+			setState("RANSOMWERE_MENU");
 		});
 	}
 	else if(m_ComputerState == "INWINDOWSFIREWALL1") {
-		m_ButtonsMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
+		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
 			setState("WORKSPACE2");
 		});
+	}
+	else if (m_ComputerState == "RANSOMWERE_MENU") {
+		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
+			setState("WORKSPACE2");
+		});	
 	}
 
 	// Cabooo :)
 }
 
-void Computer::_MouseInComputer() {
-	// Verificador simples
-
-	int x;
-	int y;
-
-	SDL_GetMouseState(&x, &y);
-
-	if (x >= printRect.x && y >= printRect.y && x <= printRect.x + printRect.w &&
-		y <= printRect.y + printRect.h) {
-		SDL_ShowCursor(SDL_ENABLE);
-	}
-	else {
-		SDL_ShowCursor(SDL_DISABLE);
-	}
-}
-
 // Renderizadores:
 
-void Computer::RenderTextures() {
+void Computer::m_RenderTextures() {
 	for (auto& p : m_Textures) {
-
 		if (p.srcRect.w == 0) {
 			SDL_RenderCopy(m_Rend, p.Tex, nullptr, &p.dstRect);
 		}
@@ -213,20 +210,17 @@ void Computer::RenderTextures() {
 				SDL_Log(SDL_GetError());
 			}
 		}
-
 	}
 
-	if (_inListaAfazeres) RenderNotePad();
+	if (m_inListaAfazeres) RenderNotePad();
 
 	DrawButtons();
 
-	if (_LoadNewScreen) {
-		LoadNewScreen();
-	}
+	if (m_LoadNewScreen) LoadNewScreen();
 }
 
 // Cria a moldura do pc (a borda)
-void Computer::RenderMoldure() {
+void Computer::m_RenderMoldure() {
 	SDL_SetRenderDrawColor(m_Rend, 192, 192, 192, 255);
 	SDL_Rect backgroundRect = { 0, 0, windowWidth, windowHeight };
 	SDL_RenderFillRect(m_Rend, &backgroundRect);
@@ -234,21 +228,21 @@ void Computer::RenderMoldure() {
 
 // Renderizador geral
 void Computer::Render() {
-	RenderMoldure();
-	RenderTextures();
+	m_RenderMoldure();
+	m_RenderTextures();
 }
 
 void Computer::RenderNotePad(){
 	SDL_Rect auxRect = m_Notepad->getRect();
 
-	if (!m_ButtonsMap["NotePadExit"]) {
-		m_ButtonsMap["NotePadExit"] = new Button(auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20, [this]() {
-		_inListaAfazeres = false;
+	if (!m_ButtonsPtrMap["NotePadExit"]) {
+		m_ButtonsPtrMap["NotePadExit"] = new Button(auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20, [this]() {
+		m_inListaAfazeres = false;
 		m_Notepad.reset();		
 	});
 
 	}else {
-		m_ButtonsMap["NotePadExit"]->SetPosition(auxRect.x + auxRect.w - 20, auxRect.y + 5);
+		m_ButtonsPtrMap["NotePadExit"]->SetPosition(auxRect.x + auxRect.w - 20, auxRect.y + 5);
 	}
 	
 	m_Notepad->Render(m_Rend, { auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20 });
@@ -256,9 +250,26 @@ void Computer::RenderNotePad(){
 
 // Eventos:
 
+void Computer::m_MouseInComputer() {
+	// Verificador simples
+	int x;
+	int y;
+
+	SDL_GetMouseState(&x, &y);
+
+	SDL_Point p = { x, y };
+
+	if (SDL_PointInRect(&p, &printRect)) {
+		SDL_ShowCursor(SDL_ENABLE);
+	}
+	else {
+		SDL_ShowCursor(SDL_DISABLE);
+	}
+}
+
 
 // Gerencia o Comportamento do Scroll do Mouse
-void Computer::_MouseWhell(const SDL_Event& e) {
+void Computer::m_MouseWhell(const SDL_Event& e) {
 	if (e.type == SDL_MOUSEWHEEL) {
 		for (auto& p : m_Textures) {
 			if (p.Scroll) {
@@ -276,24 +287,40 @@ void Computer::_MouseWhell(const SDL_Event& e) {
 	}
 }
 
+void Computer::m_UpdtDinamicBtsState() {
+	for (auto& p : m_Textures) {
+		if (p.Scroll) {
+			for (auto& b : m_ButtonsPtrMap) {
+				if (p.srcRect.y - 5 <= b.second->GetRect().y + calcAlterWindowSize(20, 'h') && b.second->GetRect().y + calcAlterWindowSize(20, 'h') <= p.srcRect.y + p.srcRect.h) {
+					b.second->SetClicable(true);
+					b.second->SetVisible(true);
+
+					b.second->SetPosition(b.second->GetOriginRect().x, b.second->GetOriginRect().y - p.srcRect.y);
+				}
+				else {
+					b.second->SetVisible(false);
+					b.second->SetClicable(false);
+					b.second->ResetPosition();
+				}
+			}
+		}
+	}
+}
+
+// Função geral dos Events
 void Computer::Events(const SDL_Event& e) {
-	_MouseInComputer();
+	m_MouseInComputer();
 
 	// Lista de Afazeres dhr
-	if (_inListaAfazeres) {
-		m_Notepad->Events(e);
-	}
+	if (m_inListaAfazeres) m_Notepad->Events(e);
 	
-	if (m_ComputerState == "INSETTINGS1") { SDL_Log("Ok, ta indo"); }
+	// Atualiza o scroll do mouse
+	m_MouseWhell(e);
 
 	// Atualiza os botões
-	for (auto& b : m_ButtonsMap) {
-		b.second->Update(e);
-	}	
-	
-	if (m_ComputerState == "INSETTINGS1") { SDL_Log("Ok, ta indo (depois)"); }
-	
-	_MouseWhell(e);
+	// Sim, a função Update ta dentro do events :)
+	m_UpdtDinamicBtsState();
+	m_UpdateButtons(e);
 }
 
 // O parse do XML
