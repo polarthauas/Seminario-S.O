@@ -19,7 +19,7 @@ public:
 	
 	int getTextWidth(const std::string& text, int fontSize);
 
-	void setPathTex(const std::string& newPath) { pathTex = newPath; }
+	inline void setPathTex(const std::string& newPath) { pathTex = newPath; }
 
 	void setFontSize(uint16_t size);
 

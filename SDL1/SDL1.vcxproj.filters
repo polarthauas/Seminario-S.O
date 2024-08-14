@@ -45,9 +45,6 @@
     <ClCompile Include="mouse.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Arquivos de Origem\Gui</Filter>
-    </ClCompile>
     <ClCompile Include="Menu.cpp">
       <Filter>Arquivos de Origem\Gui</Filter>
     </ClCompile>
@@ -68,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Arquivos de Origem\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Arquivos de Origem\Gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
