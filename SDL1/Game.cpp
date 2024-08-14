@@ -44,10 +44,6 @@ bool Game::Init(const char* title, int width, int height) {
 		std::cerr << "Failed to set fullscreen mode! SDL_Error: " << SDL_GetError() << std::endl;
 	}
 
-	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
-		SDL_Log(Mix_GetError());
-	}
-
 	SDL_GetWindowSize(m_Window, &windowWidth, &windowHeight);
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
@@ -57,12 +53,6 @@ bool Game::Init(const char* title, int width, int height) {
 	m_MsgManager->setFont("../fonts/Roboto-Regular.ttf", 30);
 
 	m_Menu = std::make_unique<Menu>(m_Renderer);
-
-	m_Music = Mix_LoadMUS("../Audios/Greenpath.mp3");
-
-	Mix_PlayMusic(m_Music, -1);
-
-	Mix_VolumeMusic(20);
 
 	return m_IsRunning = true;
 }
@@ -78,6 +68,8 @@ void Game::runCmd(const std::string& cmd) const
 
 void Game::cleanUp() {
 
+	m_MsgManager.reset();
+
 	if (m_Renderer) {
 		SDL_DestroyRenderer(m_Renderer);
 		m_Renderer = nullptr;
@@ -88,7 +80,6 @@ void Game::cleanUp() {
 		m_Window = nullptr;
 	}
 
-	Mix_CloseAudio();
 	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();

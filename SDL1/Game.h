@@ -86,9 +86,6 @@ private:
 
 	std::vector<Button> m_Buttons;	
 	
-	// Musiquinha top
-	Mix_Music* m_Music{ nullptr };
-
 	int auxControlGame{ 0 };
 	
 	bool m_IsRunning{ false };
