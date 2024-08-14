@@ -22,11 +22,14 @@ bool Game::Init(const char* title, int width, int height) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		return false;
 	}
-	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+	if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) {
 		return false;
 	}
 
-	TTF_Init();
+	if (TTF_Init() != 0) {
+		SDL_Log(TTF_GetError());
+		return false;
+	}
 
 	m_Window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
 
@@ -41,16 +44,25 @@ bool Game::Init(const char* title, int width, int height) {
 	}
 
 	if (SDL_SetWindowFullscreen(m_Window, SDL_WINDOW_FULLSCREEN_DESKTOP) < 0) {
-		std::cerr << "Failed to set fullscreen mode! SDL_Error: " << SDL_GetError() << std::endl;
+		SDL_Log("Erro ao colocar em fullscreen");
+		return false;
 	}
 
 	SDL_GetWindowSize(m_Window, &windowWidth, &windowHeight);
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-	m_MsgManager = std::make_unique<MessageManager>();
+	m_MsgManager = new MessageManager();
+	
+	if (m_MsgManager == nullptr) {
+		SDL_Log("Erro ao criar o MessageManager");
+		return false;
+	}
 
-	m_MsgManager->setFont("../fonts/Roboto-Regular.ttf", 30);
+	if (!m_MsgManager->setFont("../fonts/Roboto-Regular.ttf", 30)) {
+		SDL_Log("Erro ao carregar a fonte");
+		return false;
+	}
 
 	m_Menu = std::make_unique<Menu>(m_Renderer);
 
@@ -68,17 +80,10 @@ void Game::runCmd(const std::string& cmd) const
 
 void Game::cleanUp() {
 
-	m_MsgManager.reset();
+	if(m_MsgManager) delete m_MsgManager;
 
-	if (m_Renderer) {
-		SDL_DestroyRenderer(m_Renderer);
-		m_Renderer = nullptr;
-	}
-
-	if (m_Window) {
-		SDL_DestroyWindow(m_Window);
-		m_Window = nullptr;
-	}
+	if (m_Renderer) SDL_DestroyRenderer(m_Renderer);
+	if (m_Window) SDL_DestroyWindow(m_Window);
 
 	TTF_Quit();
 	IMG_Quit();
@@ -131,7 +136,6 @@ void Game::Event() {
 					m_TentouSair = false;
 
 					controlGameMsgs(1);
-
 					break;
 				case SDLK_DELETE:
 					auxControlGame--;
@@ -365,8 +369,5 @@ void Game::controlGameMsgs(int cmd)
 	default:
 		break;
 	}
-
-	if (m_GameState == GameState::INGAME) SDL_SetRenderDrawColor(m_Renderer, 135, 206, 235, 255);
-	else if (m_GameState == GameState::INCOMPUTER) SDL_SetRenderDrawColor(m_Renderer, 192, 192, 192, 255);
 }
 

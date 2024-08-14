@@ -11,16 +11,20 @@ MessageManager::MessageManager()
 
 MessageManager::~MessageManager()
 {
-	if (font) TTF_CloseFont(font);
+	if (font != nullptr) TTF_CloseFont(font);
 }
 
-void MessageManager::setFont(const std::string& fontPath, int fontSize)
+bool MessageManager::setFont(const std::string& fontPath, int fontSize)
 {
 	if (font) {
 		TTF_CloseFont(font);
 	}
 
 	font = TTF_OpenFont(fontPath.c_str(), fontSize);
+    
+    if (!font) return false;
+    return true;
+
 }
 
 void MessageManager::Render(SDL_Renderer* rend, const std::string& message, SDL_Color textColor, int x, int y,  bool square, bool tex)

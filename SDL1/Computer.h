@@ -146,6 +146,12 @@ private:
 	void m_LoadButtons();
 	void m_LoadTexture();
 	
+	inline void m_LoadExitBtn() {
+		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
+			setState("WORKSPACE2");
+		});
+	}
+
 	// Chama o LoadButtons e LoadTexture
 	void LoadNewScreen();
 

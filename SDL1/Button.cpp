@@ -46,6 +46,8 @@ void Button::Draw(SDL_Renderer* rend)
 	}
 }
 
+// Fundamental para os botões dinâmicos
+// Reseta a posição do botão para o original
 void Button::ResetPosition() {
 	m_ButtonRect = m_OriginRect;
 }

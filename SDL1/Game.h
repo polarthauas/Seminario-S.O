@@ -77,10 +77,11 @@ private:
 	std::unique_ptr<Menu> m_Menu;
 	std::unique_ptr<Fases> m_Fases;
 	std::unique_ptr<Computer> m_Computer;
-	std::unique_ptr<MessageManager> m_MsgManager;
 	std::unique_ptr<Douglas> m_Douglas;
 	std::unique_ptr<Mouse> mouse;
 	std::unique_ptr<QuestManager> m_QuestMngr;
+
+	MessageManager* m_MsgManager;
 
 	GameState m_GameState{ GameState::INMENU };
 

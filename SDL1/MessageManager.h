@@ -13,7 +13,7 @@ public:
 	MessageManager();
 	~MessageManager();
 
-	void setFont(const std::string& fontPath, int fontSize);
+	[[nodiscard]] bool setFont(const std::string& fontPath, int fontSize);
 
 	void Render(SDL_Renderer* rend, const std::string& message, SDL_Color color, int x, int y, bool square = false, bool tex = false);
 	

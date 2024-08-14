@@ -106,12 +106,10 @@ void Computer::LoadNewScreen()
 	m_LoadNewScreen = false;
 }
 
-
 void Computer::m_CleanButtonMap() {
 	for (auto& b : m_ButtonsPtrMap) {
 		delete b.second;
 	}
-
 	m_ButtonsPtrMap.clear();
 }
 
@@ -149,18 +147,14 @@ void Computer::m_LoadButtons()
 	}
 
 	else if (m_ComputerState == "INSETTINGS1") {
+		m_LoadExitBtn();
+		
 		m_ButtonsPtrMap["WINDOWSDEFENDER_ENTER"] = new Button(printRect.x + 320, 155, 970, 65, [this]() {
 			setState("INWINDOWSDEFENDER1");
 		});
-
-		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
-			setState("WORKSPACE2");
-		});
 	}
 	else if (m_ComputerState == "INWINDOWSDEFENDER1") {
-		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
-			setState("WORKSPACE2");
-		});
+		m_LoadExitBtn();
 
 		m_ButtonsPtrMap["INWINDOWSDEFENDERVRIUS1_ENTER"] = new Button(printRect.x + 350, 220, 230, 290, [this]() {
 			setState("INWINDOWSDEFENDERVIRUS1");
@@ -176,23 +170,20 @@ void Computer::m_LoadButtons()
 		});
 	}
 	else if (m_ComputerState == "INWINDOWSDEFENDERVIRUS1") {
-		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
-			setState("WORKSPACE2");
-		});
+		m_LoadExitBtn();
 
-		m_ButtonsPtrMap["RANSOMWERE_ENTER"] = new Button(450, 1000, 500, 20, [this]() {
+		m_ButtonsPtrMap["RANSOMWERE_ENTER"] = new Button(printRect.x + 350, 1000, 240, 20, [this]() {
 			setState("RANSOMWERE_MENU");
 		});
 	}
 	else if(m_ComputerState == "INWINDOWSFIREWALL1") {
-		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
-			setState("WORKSPACE2");
-		});
+		m_LoadExitBtn();
 	}
 	else if (m_ComputerState == "RANSOMWERE_MENU") {
-		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
-			setState("WORKSPACE2");
-		});	
+		m_LoadExitBtn();
+	}
+	else if (m_ComputerState == "PROTECAO_CONTAS_MENU") {
+		m_LoadExitBtn();
 	}
 
 	// Cabooo :)
