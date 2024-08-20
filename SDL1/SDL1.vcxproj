@@ -109,8 +109,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Thauan\Documents\libraries\SDL2_image-2.8.2\lib\x64;C:\Users\Thauan\Documents\libraries\SDL2-2.30.5\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,6 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="ButtonMngr.cpp" />
     <ClCompile Include="Computer.cpp" />
     <ClCompile Include="Douglas.cpp" />
     <ClCompile Include="Fases.cpp" />
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="ButtonMngr.h" />
     <ClInclude Include="Computer.h" />
     <ClInclude Include="Douglas.h" />
     <ClInclude Include="Fases.h" />
@@ -160,7 +162,8 @@
     <ClInclude Include="Notepad.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="QuestManager.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureMngr.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Textures.xml" />

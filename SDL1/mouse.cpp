@@ -3,9 +3,8 @@
 #include <windows.h>
 #include <thread>
 #include <cmath>
-#include <SDL_image.h>
 
-Mouse::Mouse(SDL_Renderer* rend) {
+Mouse::Mouse() {
 
 }
 

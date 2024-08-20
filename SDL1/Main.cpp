@@ -14,8 +14,9 @@ Um abraço para geral ksks
 
 */
 
+#define SDL_MAIN_HANDLED
 
-#include <SDL.h>
+#include <SDl2/SDL.h>
 
 #include "Globals.h"
 #include "Game.h"

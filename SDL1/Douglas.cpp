@@ -1,6 +1,9 @@
 #include "Douglas.h"
 #include "globals.h"
 
+#include <string>
+#include <SDL2/SDL_image.h>
+
 Douglas::Douglas(SDL_Renderer* rend)
 	: m_DouglasState(DouglasState::IDLE_RIGHT), m_Cntx(rend)
 {

@@ -2,8 +2,8 @@
 #include "Globals.h"
 #include <string>
 
-Button::Button(int x, int y, int width, int height, const std::function<void()>& onClick, SDL_Texture* tex)
-	: m_Tex(tex), m_OnClick(onClick)
+Button::Button(int x, int y, int width, int height, const std::function<void()>& onClick)
+	: m_OnClick(onClick)
 {
 	// Ajusta conforme a resolução :)
 	m_ButtonRect = { calcAlterWindowSize(x, 'w'), calcAlterWindowSize(y, 'h'), calcAlterWindowSize(width, 'w'), calcAlterWindowSize(height, 'h') };

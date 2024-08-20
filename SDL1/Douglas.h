@@ -8,7 +8,7 @@
 #pragma once
 
 #include <vector>
-#include <SDL.h>
+#include <SDl2/SDL.h>
 
 // Enum para os estados do jogador
 enum class DouglasState

@@ -22,14 +22,17 @@
     <Filter Include="Arquivos de Cabeçalho\Gui\Quest">
       <UniqueIdentifier>{02d148b4-3025-45e1-b871-e8b3bcf3785c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Arquivos de Origem\Gui\Message">
-      <UniqueIdentifier>{eeed66b1-50a0-4e59-9733-d9ddfe59980f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Arquivos de Origem\Core">
       <UniqueIdentifier>{606a944f-dace-4280-b4ea-cc96f5771f2c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Arquivos de Cabeçalho\Core">
       <UniqueIdentifier>{49676731-bf8c-4be1-9211-3112947b8057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Origem\Managers">
+      <UniqueIdentifier>{018f0bf9-4051-49e4-afe1-d67730ee2853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho\Managers">
+      <UniqueIdentifier>{b8daa655-e6cd-47f5-9be6-f8ef938364ed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,13 +51,7 @@
     <ClCompile Include="Menu.cpp">
       <Filter>Arquivos de Origem\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="MessageManager.cpp">
-      <Filter>Arquivos de Origem\Gui\Message</Filter>
-    </ClCompile>
     <ClCompile Include="Notepad.cpp">
-      <Filter>Arquivos de Origem\Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="QuestManager.cpp">
       <Filter>Arquivos de Origem\Gui</Filter>
     </ClCompile>
     <ClCompile Include="Computer.cpp">
@@ -69,6 +66,15 @@
     <ClCompile Include="Button.cpp">
       <Filter>Arquivos de Origem\Gui</Filter>
     </ClCompile>
+    <ClCompile Include="QuestManager.cpp">
+      <Filter>Arquivos de Origem\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageManager.cpp">
+      <Filter>Arquivos de Origem\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonMngr.cpp">
+      <Filter>Arquivos de Origem\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -78,9 +84,6 @@
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="Fases.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="mouse.h">
@@ -95,9 +98,6 @@
     <ClInclude Include="Notepad.h">
       <Filter>Arquivos de Cabeçalho\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="QuestManager.h">
-      <Filter>Arquivos de Cabeçalho\Gui\Quest</Filter>
-    </ClInclude>
     <ClInclude Include="Quest.h">
       <Filter>Arquivos de Cabeçalho\Gui\Quest</Filter>
     </ClInclude>
@@ -107,8 +107,20 @@
     <ClInclude Include="Game.h">
       <Filter>Arquivos de Cabeçalho\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
     <ClInclude Include="MessageManager.h">
-      <Filter>Arquivos de Cabeçalho\Gui</Filter>
+      <Filter>Arquivos de Cabeçalho\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureMngr.h">
+      <Filter>Arquivos de Cabeçalho\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonMngr.h">
+      <Filter>Arquivos de Cabeçalho\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestManager.h">
+      <Filter>Arquivos de Cabeçalho\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

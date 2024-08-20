@@ -1,12 +1,20 @@
 #pragma once
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <string>
 
 #include <functional>
 
 class Button {
 public:
-	Button(int x, int y, int width, int height, const std::function<void()>& onClick, SDL_Texture* tex = nullptr);
+	Button(int x, int y, int width, int height, const std::function<void()>& onClick);
+	
+	inline bool loadTexture(SDL_Renderer* rend, const std::string& pathTex) { 
+		m_Tex = IMG_LoadTexture(rend, pathTex.c_str());
+		if (m_Tex == nullptr) return false;
+		return true;
+	}
 
 	inline SDL_Rect GetRect() const { return m_ButtonRect; }
 	inline SDL_Rect GetOriginRect() const { return m_OriginRect; }

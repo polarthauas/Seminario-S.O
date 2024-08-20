@@ -15,14 +15,16 @@
 Game::Game(){}
 
 Game::~Game() {
-	cleanUp();
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
 }
 
 bool Game::Init(const char* title, int width, int height) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		return false;
 	}
-	if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) {
+	if (!(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG))) {
 		return false;
 	}
 
@@ -52,19 +54,16 @@ bool Game::Init(const char* title, int width, int height) {
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-	m_MsgManager = new MessageManager();
-	
-	if (m_MsgManager == nullptr) {
-		SDL_Log("Erro ao criar o MessageManager");
-		return false;
-	}
+	m_MsgManager = std::make_unique<MessageManager>();
+	m_TextureMngr = std::make_shared<TextureMngr>(m_Renderer);
+	m_ButtonMngr = std::make_shared<ButtonMngr>(m_Renderer, m_TextureMngr);
 
 	if (!m_MsgManager->setFont("../fonts/Roboto-Regular.ttf", 30)) {
 		SDL_Log("Erro ao carregar a fonte");
 		return false;
 	}
 
-	m_Menu = std::make_unique<Menu>(m_Renderer);
+	m_Menu = std::make_unique<Menu>(m_Renderer, m_TextureMngr, m_ButtonMngr);
 
 	return m_IsRunning = true;
 }
@@ -79,15 +78,12 @@ void Game::runCmd(const std::string& cmd) const
 }
 
 void Game::cleanUp() {
-
-	if(m_MsgManager) delete m_MsgManager;
+	m_Menu.reset();
+	m_Computer.reset();
+	m_MsgManager.reset();
 
 	if (m_Renderer) SDL_DestroyRenderer(m_Renderer);
 	if (m_Window) SDL_DestroyWindow(m_Window);
-
-	TTF_Quit();
-	IMG_Quit();
-	SDL_Quit();
 }
 
 void Game::Event() {
@@ -103,7 +99,8 @@ void Game::Event() {
 				setGameState(GameState::INGAME);
 				m_Douglas = std::make_unique<Douglas>(m_Renderer);
 				m_Fases = std::make_unique<Fases>(m_Renderer);
-				m_QuestMngr = std::make_unique<QuestManager>();
+
+				m_QuestMngr = std::make_shared<QuestManager>();
 
 				m_Buttons.emplace_back(595, 256, 85, 128, [this]() {
 					m_TentouSair = true;
@@ -128,7 +125,7 @@ void Game::Event() {
 
 					auxControlGame = 0;
 
-					m_Menu = std::make_unique<Menu>(m_Renderer);	
+					m_Menu = std::make_unique<Menu>(m_Renderer, m_TextureMngr, m_ButtonMngr);	
 
 					setGameState(GameState::INMENU);
 					break;
@@ -292,7 +289,7 @@ void Game::controlGameMsgs(int cmd)
 			setGameState(GameState::INCOMPUTER);
 
 			m_Computer = std::make_unique<Computer>(m_Renderer);
-			mouse = std::make_unique<Mouse>(m_Renderer);
+			mouse = std::make_unique<Mouse>();
 
 			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 

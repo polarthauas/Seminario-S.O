@@ -1,6 +1,6 @@
 #include "Globals.h"
-#include <SDL_image.h>
 #include <iostream>
+#include <SDL2/SDL_rect.h>
 
 int windowHeight;
 int windowWidth;

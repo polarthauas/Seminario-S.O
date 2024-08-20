@@ -1,8 +1,6 @@
 #pragma once
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <string>
+struct SDL_Rect;
 
 #define DESIGN_WIDTH 1360
 #define DESIGN_HEIGHT 768

@@ -1,22 +1,22 @@
 #pragma once
 
-#include "globals.h"
+#include "Globals.h"
 
 #include <string>
-#include <SDL_pixels.h>
-#include <SDL_render.h>
-#include <SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 class MessageManager
 {
 public:
 	MessageManager();
 	~MessageManager();
-
+	
+	// Sla, quis usar o nodiscard aqui
 	[[nodiscard]] bool setFont(const std::string& fontPath, int fontSize);
 
 	void Render(SDL_Renderer* rend, const std::string& message, SDL_Color color, int x, int y, bool square = false, bool tex = false);
-	
+
 	int getTextWidth(const std::string& text, int fontSize);
 
 	inline void setPathTex(const std::string& newPath) { pathTex = newPath; }

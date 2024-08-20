@@ -1,15 +1,21 @@
 #pragma once
 #include <iostream>
-#include <SDL_image.h>
-#include <SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL.h>
 #include <memory>
 
 #include "Menu.h"
 #include "Computer.h"
 #include "Fases.h"
+
+// Managers
+
+#include "ButtonMngr.h"
+#include "TextureMngr.h"
 #include "MessageManager.h"
 #include "QuestManager.h"
-#include "Button.h"
+
+
 #include "mouse.h"
 
 enum class GameState {
@@ -79,11 +85,17 @@ private:
 	std::unique_ptr<Computer> m_Computer;
 	std::unique_ptr<Douglas> m_Douglas;
 	std::unique_ptr<Mouse> mouse;
-	std::unique_ptr<QuestManager> m_QuestMngr;
+	
+	std::shared_ptr<QuestManager> m_QuestMngr;
+	std::shared_ptr<TextureMngr> m_TextureMngr;
+	std::shared_ptr<ButtonMngr> m_ButtonMngr;
 
-	MessageManager* m_MsgManager;
+	std::unique_ptr<MessageManager> m_MsgManager;
 
 	GameState m_GameState{ GameState::INMENU };
+
+
+
 
 	std::vector<Button> m_Buttons;	
 	

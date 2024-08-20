@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <SDL.h>
+#include <SDl2/SDL.h>
 
 #include "Douglas.h"
 

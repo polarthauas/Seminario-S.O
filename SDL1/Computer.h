@@ -17,17 +17,19 @@
 #include "MessageManager.h"
 #include "Button.h"
 
-#include <SDL_image.h>
-#include <SDL.h>
+#include "ButtonMngr.h"
+#include "TextureMngr.h"
+
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL.h>
 #include <string>
-#include <map>
 #include <unordered_map>
 #include <vector>
 #include <memory>
 
 // Esses negócio grande ai
-using ButtonsMap = std::map<std::string, Button*, std::less<>>;
-using FilePrintMap = std::map<std::string, std::string, std::less<>>;
+using ButtonsMap = std::unordered_map<std::string, Button*>;
+using FilePrintMap = std::unordered_map<std::string, std::string>;
 
 // Velocidade da rolagem das guias
 const uint8_t SCROLL_SPEED = 15;

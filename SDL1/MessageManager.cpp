@@ -1,6 +1,7 @@
 #include "MessageManager.h"
-#include <SDL_rect.h>
-#include <SDL_surface.h>
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <sstream>
 #include <vector>
 
@@ -11,7 +12,10 @@ MessageManager::MessageManager()
 
 MessageManager::~MessageManager()
 {
-	if (font != nullptr) TTF_CloseFont(font);
+    if (font != nullptr) {
+        TTF_CloseFont(font);
+        font = nullptr;
+    }
 }
 
 bool MessageManager::setFont(const std::string& fontPath, int fontSize)

@@ -3,51 +3,54 @@
 #include "Button.h"
 #include "MessageManager.h"
 
-Menu::Menu(SDL_Renderer* rend)
-	: renderer(rend)
-{
+#include "ButtonMngr.h"
+#include "TextureMngr.h"
 
+Menu::Menu(SDL_Renderer* rend, std::shared_ptr<TextureMngr> texturemngr, std::shared_ptr<ButtonMngr> buttonmngr)
+	: m_Renderer(rend), m_TextureMngr(texturemngr), m_ButtonMngr(buttonmngr)
+{
 	msgManager = std::make_unique<MessageManager>();
 
-	msgManager->setFont("../fonts/Roboto-Regular.ttf", 30);
+	if (!msgManager->setFont("../fonts/Roboto-Regular.ttf", 30)) {
+		SDL_Log("Error");
+		exit(1);
+	}
 
 	loadTextures();
 
-	StartButton = std::make_unique<Button>(550, 400, 200, 50, [this]() {startClicked = true; }, startButtonTex);
-	ExitButton = std::make_unique<Button>(550, 500, 200, 50, [this]() {exitClicked = true; }, exitButtonTex);
+	auto startButton = std::make_unique<Button>(550, 400, 200, 50, [this]() {startClicked = true; });
+	startButton->loadTexture(m_Renderer, "../imgs/Menu/PlayBtn.png");
+	auto exitButton = std::make_unique<Button>(550, 500, 200, 50, [this]() {exitClicked = true; });
+	exitButton->loadTexture(m_Renderer, "../imgs/Menu/ExitBtn.png");
+
+	m_ButtonMngr->addButton("startButton", std::move(startButton));
+	m_ButtonMngr->addButton("exitButton", std::move(exitButton));
+
 }
 
 Menu::~Menu() {
 	freeTextures();
+	m_ButtonMngr->clean();
 }
 
 void Menu::loadTextures() {
-	backgroundTex = IMG_LoadTexture(renderer, "../imgs/Menu/douglas_nunes.jpg");
-
-	exitButtonTex = IMG_LoadTexture(renderer, "../imgs/Menu/ExitBtn.png");
-
-	startButtonTex = IMG_LoadTexture(renderer, "../imgs/Menu/PlayBtn.png");
+	m_TextureMngr->loadTex("backGroundMenu", "../imgs/Menu/douglas_nunes.png");
 }
 
 void Menu::freeTextures() {
-	SDL_DestroyTexture(backgroundTex);
-	SDL_DestroyTexture(startButtonTex);
-	SDL_DestroyTexture(exitButtonTex);
-
+	m_TextureMngr->dropTex("backGroundMenu");
 }
 
 void Menu::Events(const SDL_Event& e) {
-	StartButton->Update(e);
-	ExitButton->Update(e);
+	m_ButtonMngr->updateAll(e);
 }
 
 void Menu::Render() {
-	SDL_RenderCopy(renderer, backgroundTex, nullptr, nullptr);
+	m_TextureMngr->draw("backGroundMenu", nullptr, nullptr);
 
-	StartButton->Draw(renderer);
-	ExitButton->Draw(renderer);
+	m_ButtonMngr->renderAll();
 
-	msgManager->Render(renderer, "Seminario Douglas", { 0, 230, 0 }, windowWidth / 2 - 120, 50);
+	msgManager->Render(m_Renderer, "Seminario Douglas", { 0, 230, 0 }, windowWidth / 2 - 120, 50);
 }
 
 bool Menu::isStartClicked() const{

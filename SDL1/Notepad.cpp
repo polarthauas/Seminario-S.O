@@ -2,7 +2,7 @@
 #include "MessageManager.h"
 #include "Notepad.h"
 
-#include <SDL.h>
+#include <SDl2/SDL.h>
 #include <string>
 #include <vector>
 
