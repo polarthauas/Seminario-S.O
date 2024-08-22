@@ -28,3 +28,14 @@ bool Global::clickedRect(int x, int y, SDL_Rect b) {
 	return (x >= b.x && x <= b.x + b.w &&
 		y >= b.y && y <= b.y + b.h);
 }
+
+SDL_Rect Global::resizeRect(SDL_Rect a)
+{
+	SDL_Rect _rect = {};
+	_rect.x = resizeValue(a.x, RESIZE_MODE_WIDTH);
+	_rect.y = resizeValue(a.y, RESIZE_MODE_HEIGHT);
+	_rect.w = resizeValue(a.w, RESIZE_MODE_WIDTH);
+	_rect.h = resizeValue(a.h, RESIZE_MODE_HEIGHT);
+
+	return _rect;
+}

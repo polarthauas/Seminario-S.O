@@ -13,26 +13,30 @@
 
 #pragma once
 
-#include "Notepad.h"
 #include "MessageManager.h"
-#include "Button.h"
-
-#include "ButtonMngr.h"
-#include "TextureMngr.h"
 
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
 #include <memory>
 
+#include "Notepad.h"
+#include "Button.h"
+
+class TextureMngr;
+class ButtonMngr;
+
 // Esses negócio grande ai
-using ButtonsMap = std::unordered_map<std::string, Button*>;
 using FilePrintMap = std::unordered_map<std::string, std::string>;
 
 // Velocidade da rolagem das guias
 const uint8_t SCROLL_SPEED = 15;
+
+static const int BORDER_SIZE = 20;
+static const int WINDOWSBAR_SIZE = 42;
 
 // Facilita o gerenciamento das Print
 struct PrintTexture {
@@ -72,7 +76,7 @@ public:
 	* 
 	* @return this
 	*/
-	Computer(SDL_Renderer* rend);
+	Computer(SDL_Renderer* rend, std::shared_ptr<TextureMngr> textureMngr, std::shared_ptr<ButtonMngr> buttonmngr);
 
 	// Função Renderizadora principal
 	void Render();
@@ -116,8 +120,10 @@ private:
 
 	std::vector<PrintTexture> m_Textures;
 
-	ButtonsMap m_ButtonsPtrMap;
 	FilePrintMap m_PrintsMap;
+
+	std::shared_ptr<TextureMngr> m_TextureMngr;
+	std::shared_ptr<ButtonMngr> m_ButtonMngr;
 
 	void ParseXML();
 
@@ -126,32 +132,23 @@ private:
 	void m_RenderTextures();
 	void m_RenderMoldure();
 
-	inline void DrawButtons() {
-		SDL_SetRenderDrawColor(m_Rend, 255, 255, 255, 255);
-		for (auto& b : m_ButtonsPtrMap) {
-			b.second->Draw(m_Rend);
-		}
-	}
-
-	inline void m_UpdateButtons(const SDL_Event& e) {
-		for (auto& b : m_ButtonsPtrMap) {
-			b.second->Update(e);
-		}
-	}
-	
 	// Funções de carregamento
 	// Apenas deletam o que tinha e carregam o novo
-
 
 	void m_CleanButtonMap();
 
 	void m_LoadButtons();
 	void m_LoadTexture();
 	
-	inline void m_LoadExitBtn() {
-		m_ButtonsPtrMap["WORKSPACE2_ENTER"] = new Button(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
-			setState("WORKSPACE2");
-		});
+	void _LoadExitBtn();
+
+	inline void _LoadWindowsBar() {
+		// Cria a barra do windows
+
+		SDL_Rect bar = Global::resizeRect({ BORDER_SIZE, Global::windowHeight - BORDER_SIZE - WINDOWSBAR_SIZE, Global::windowWidth - 2 * BORDER_SIZE, WINDOWSBAR_SIZE});
+
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_BAR"].c_str()), bar);
+	
 	}
 
 	// Chama o LoadButtons e LoadTexture

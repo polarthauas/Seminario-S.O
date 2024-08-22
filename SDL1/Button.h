@@ -36,7 +36,7 @@ public:
 	* @param y - Pos y
 	* 
 	*/
-	void SetPosition(int x, int y) { m_ButtonRect.x = x; m_ButtonRect.y = y; };
+	void setPosition(int x, int y) { m_ButtonRect.x = x; m_ButtonRect.y = y; };
 	void Draw(SDL_Renderer* rend);
 
 	void ResetPosition();

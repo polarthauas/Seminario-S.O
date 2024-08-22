@@ -23,7 +23,7 @@ void QuestManager::Render(SDL_Renderer* rend)
 	RenderMoldure(rend);
 	RenderQuests(rend);
 	
-	m_MsgManager->Render(rend, "Quests", { 255, 0, 0 }, windowWidth / 2 - 50, windowHeight / 2 - 176);
+	m_MsgManager->Render(rend, "Quests", { 255, 0, 0 }, Global::DESIGN_WIDTH / 2 - 50, Global::DESIGN_HEIGHT / 2 - 176);
 }
 
 void QuestManager::RenderQuests(SDL_Renderer* rend) {
@@ -32,21 +32,23 @@ void QuestManager::RenderQuests(SDL_Renderer* rend) {
 	for (uint8_t i = countInitial; i < countInitial + 3 && i < m_Quests.size(); ++i) {
 		SDL_SetRenderDrawColor(rend, 0, 0, 250, 255);
 
-		SDL_Rect questRect = {windowWidth / 2 - 230, windowHeight / 2 - 75 - 55 * (2-auxCount), 400, 50};
+		SDL_Rect questRect = Global::resizeRect({Global::DESIGN_WIDTH / 2 - 230, Global::DESIGN_HEIGHT / 2 - 75 - 55 * (2-auxCount), 400, 50});
 		SDL_RenderFillRect(rend, &questRect);
 
-		m_MsgManager->Render(rend, m_Quests[i]->GetTitle(), {0, 255, 0}, windowWidth / 2 - 200, windowHeight / 2 - 70 - (55 * (2 - auxCount)));
+		m_MsgManager->Render(rend, m_Quests[i]->GetTitle(), {0, 255, 0}, Global::DESIGN_WIDTH / 2 - 200, Global::DESIGN_HEIGHT / 2 - 70 - (55 * (2 - auxCount)));
 		auxCount++;
 	}
 }
 
 void QuestManager::RenderMoldure(SDL_Renderer* rend)
 {
-	SDL_Rect mainRect = {windowWidth / 2 - 300, windowHeight / 2 - 200, 600, 300};
+	SDL_Rect mainRect = {Global::windowWidth / 2 - 300, Global::windowHeight / 2 - 200, 600, 300};
 	SDL_SetRenderDrawColor(rend, 255, 215, 0, 255);
 	SDL_RenderFillRect(rend, &mainRect);
 
-	SDL_Rect questRect = { mainRect.x + 20, mainRect.y + 20, 600 - 40, 300 - 40 };
+
+	// Não necessita de redimencionamento no x e y, apenas no W e H!
+	SDL_Rect questRect = { mainRect.x + 20, mainRect.y + 20, Global::resizeValue(560, Global::RESIZE_MODE_WIDTH), Global::resizeValue(260, Global::RESIZE_MODE_HEIGHT)};
 	SDL_SetRenderDrawColor(rend, 128, 128, 128, 255);
 	SDL_RenderFillRect(rend, &questRect);
 }

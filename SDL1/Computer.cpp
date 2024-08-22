@@ -1,13 +1,15 @@
 #include "Computer.h"
 #include "Globals.h"
 #include "Notepad.h"
+#include "TextureMngr.h"
+#include "ButtonMngr.h"
 
 #include <vector>
 #include <memory>
 #include <tinyxml2.h>
 
-Computer::Computer(SDL_Renderer* rend)
-	: m_ComputerState("WORKSPACE1"), m_Rend(rend)
+Computer::Computer(SDL_Renderer* rend, std::shared_ptr<TextureMngr> texturemngr, std::shared_ptr<ButtonMngr> buttonmngr)
+	: m_ComputerState("WORKSPACE1"), m_Rend(rend), m_TextureMngr(texturemngr), m_ButtonMngr(buttonmngr)
 {
 	printRect = { Global::resizeValue(20, Global::RESIZE_MODE_WIDTH), Global::resizeValue(20, Global::RESIZE_MODE_HEIGHT), 
 		Global::windowWidth - Global::resizeValue(40, Global::RESIZE_MODE_WIDTH),
@@ -22,19 +24,14 @@ Computer::Computer(SDL_Renderer* rend)
 }
 
 void Computer::m_LoadTexture() {
-
-	// Calcula a variação altX e altY por causa do tamanho da tela
-	// [DEPRECATED]
-
-	int altX = Global::resizeValue(20, Global::RESIZE_MODE_WIDTH);
-	int altY = Global::resizeValue(20, Global::RESIZE_MODE_HEIGHT);
-
 	// Destrói e limpa as texturas para serem colocadas novas
 	for (auto& p : m_Textures) {
 		SDL_DestroyTexture(p.Tex);
 	}
 
 	m_Textures.clear();
+
+	m_TextureMngr->clean();
 
 	// Alerta: MUITOS IF ELSE
 
@@ -60,27 +57,24 @@ void Computer::m_LoadTexture() {
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INWINDOWSDEFENDER1"].c_str()), printRect);
 	}
 	else if (m_ComputerState == "INWINDOWSDEFENDERVIRUS1") {
+		_LoadWindowsBar();
 
-		// Cria a barra do windows
+		SDL_Rect rectLateral = Global::resizeRect({ BORDER_SIZE, BORDER_SIZE, 320, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
 
-		SDL_Rect bar = { altX, Global::windowHeight - altY - getResizeWindow(42, 'h'), Global::windowWidth - 2 * altX, getResizeWindow(42, 'h')};
-
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_BAR"].c_str()), bar);
-
-		SDL_Rect rectLateral = { altX, altY, getResizeWindow(320, 'w'), Global::windowHeight - 2 * altY - bar.h};
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_DEFENDERLATERAL"].c_str()), rectLateral);
-		SDL_Rect rectPrint = {altX+320, altY, Global::windowWidth - getResizeWindow(40, 'w') - 320, Global::windowHeight - 2 * altY - bar.h};
+		
+		SDL_Rect rectPrint = Global::resizeRect({BORDER_SIZE+320, BORDER_SIZE, Global::DESIGN_WIDTH - 360, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
+
 		SDL_Rect srcPrint = { 0, 0, 1040, 728 };
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INWINDOWSDEFENDERVIRUS1"].c_str()), rectPrint, srcPrint, true, 1038);
 	}
 	else if (m_ComputerState == "INWINDOWSFIREWALL1") {
-		SDL_Rect bar = { altX, Global::windowHeight - altY - getResizeWindow(42, 'h'), Global::windowWidth - 2 * altX, getResizeWindow(42, 'h')};
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_BAR"].c_str()), bar);
+		_LoadWindowsBar();
 
-		SDL_Rect rectLateral = { altX, altY, getResizeWindow(320, 'w'), Global::windowHeight - 2 * altY - bar.h};
+		SDL_Rect rectLateral = Global::resizeRect({ BORDER_SIZE, BORDER_SIZE, 320, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_FIREWALL_LATERAL"].c_str()), rectLateral);
 
-		SDL_Rect rectPrint = {altX+320, altY, Global::windowWidth - getResizeWindow(40, 'w') - 320, Global::windowHeight - 2 * altY - bar.h};
+		SDL_Rect rectPrint = Global::resizeRect({BORDER_SIZE+320, BORDER_SIZE, Global::DESIGN_WIDTH - 360, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
 		SDL_Rect srcPrint = { 0, 0, 1080, 728 };
 		
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INWINDOWSFIREWALL1"].c_str()), rectPrint, srcPrint, true, 1080);
@@ -98,6 +92,15 @@ void Computer::m_LoadTexture() {
 	// UFA! Finalmente acabou esses IF ELSE :)
 }
 
+void Computer::_LoadExitBtn()
+{
+	auto button1 = std::make_unique<Button>(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
+		setState("WORKSPACE2");
+		});
+
+	m_ButtonMngr->addButton("workspace2Enter", std::move(button1));
+}
+
 void Computer::LoadNewScreen()
 {
 	m_LoadTexture();
@@ -108,10 +111,7 @@ void Computer::LoadNewScreen()
 }
 
 void Computer::m_CleanButtonMap() {
-	for (auto& b : m_ButtonsPtrMap) {
-		delete b.second;
-	}
-	m_ButtonsPtrMap.clear();
+	m_ButtonMngr->clean();
 }
 
 void Computer::m_LoadButtons()
@@ -123,24 +123,30 @@ void Computer::m_LoadButtons()
 	// ALERTA: MUITOS IF E ELSE
 
 	if (m_ComputerState == "WORKSPACE2") {
-		m_ButtonsPtrMap["LixeiraEnter"] = new Button(alt, alt, 75, 75, [this]() {
+
+		auto button1 = std::make_unique<Button>(BORDER_SIZE, BORDER_SIZE, 75, 75, [this]() {
 			m_inLixeira = true; 
 		});
 
-		m_ButtonsPtrMap["NotePadEnter"] = new Button(alt + 150, alt, 75, 75, [this]() {
+		auto button2 = std::make_unique<Button>(BORDER_SIZE + 150, BORDER_SIZE, 75, 75, [this]() {
 			m_inListaAfazeres = true;
 			m_Notepad = std::make_unique<Notepad>(screenListaAfaz);
 			m_Notepad->SetIsTyping(true);
 		});
 
-		m_ButtonsPtrMap["SettingsEnter"] = new Button(alt, alt + 80, 75, 75, [this]() {
+		auto button3 = std::make_unique<Button>(BORDER_SIZE, BORDER_SIZE + 80, 75, 75, [this]() {
 			m_inLixeira = false;
 			setState("INSETTINGS1");
 		});
 
-		m_ButtonsPtrMap["SecretEnter"] = new Button(alt + 75, alt, 75, 75, [this]() {
+		auto button4 = std::make_unique<Button>(alt + 75, alt, 75, 75, [this]() {
 			m_inSecretPasta = true;
 		});
+		
+		m_ButtonMngr->addButton("enterLixeira", std::move(button1));
+		m_ButtonMngr->addButton("enterNotepad", std::move(button2));
+		m_ButtonMngr->addButton("enterSecretFolder", std::move(button4));
+		m_ButtonMngr->addButton("enterTrash", std::move(button3));
 
 	}
 	else if (m_ComputerState == "INFIREFOXY1") {
@@ -148,43 +154,52 @@ void Computer::m_LoadButtons()
 	}
 
 	else if (m_ComputerState == "INSETTINGS1") {
-		m_LoadExitBtn();
+		_LoadExitBtn();
 		
-		m_ButtonsPtrMap["WINDOWSDEFENDER_ENTER"] = new Button(printRect.x + 320, 155, 970, 65, [this]() {
+		auto button1 = std::make_unique<Button>(printRect.x + 320, 155, 970, 65, [this]() {
 			setState("INWINDOWSDEFENDER1");
 		});
+		
+		m_ButtonMngr->addButton("windowsDefenderEnter", std::move(button1));	
 	}
 	else if (m_ComputerState == "INWINDOWSDEFENDER1") {
-		m_LoadExitBtn();
+		_LoadExitBtn();
 
-		m_ButtonsPtrMap["INWINDOWSDEFENDERVRIUS1_ENTER"] = new Button(printRect.x + 350, 220, 230, 290, [this]() {
+		auto button1 = std::make_unique<Button>(printRect.x + 350, 220, 230, 290, [this]() {
 			setState("INWINDOWSDEFENDERVIRUS1");
 	
 		});
 
-		m_ButtonsPtrMap["INWINDOWSFIREWALL1_ENTER"] = new Button(printRect.x + 830, 230, 220, 275, [this]() {
+		auto button2 = std::make_unique<Button>(printRect.x + 830, 230, 220, 275, [this]() {
 			setState("INWINDOWSFIREWALL1");
 		});
 
-		m_ButtonsPtrMap["PROTECAO_CONTAS_ENTER"] = new Button(printRect.x + 585, 230, 220, 275, [this]() {
+		auto button3 = std::make_unique<Button>(printRect.x + 585, 230, 220, 275, [this]() {
 			setState("PROTECAO_CONTAS_MENU");
 		});
+
+		m_ButtonMngr->addButton("windowsDefenderEnter", std::move(button1));
+		m_ButtonMngr->addButton("fireWallEnter", std::move(button2));
+		m_ButtonMngr->addButton("protecaoContasEnter", std::move(button3));
 	}
 	else if (m_ComputerState == "INWINDOWSDEFENDERVIRUS1") {
-		m_LoadExitBtn();
+		_LoadExitBtn();
 
-		m_ButtonsPtrMap["RANSOMWERE_ENTER"] = new Button(printRect.x + 350, 1000, 240, 20, [this]() {
+		auto button1 = std::make_unique<Button>(printRect.x + 350, 1000, 240, 20, [this]() {
 			setState("RANSOMWERE_MENU");
 		});
+
+		m_ButtonMngr->addButton("ransomwererEnter", std::move(button1));
+	
 	}
 	else if(m_ComputerState == "INWINDOWSFIREWALL1") {
-		m_LoadExitBtn();
+		_LoadExitBtn();
 	}
 	else if (m_ComputerState == "RANSOMWERE_MENU") {
-		m_LoadExitBtn();
+		_LoadExitBtn();
 	}
 	else if (m_ComputerState == "PROTECAO_CONTAS_MENU") {
-		m_LoadExitBtn();
+		_LoadExitBtn();
 	}
 
 	// Cabooo :)
@@ -206,8 +221,6 @@ void Computer::m_RenderTextures() {
 
 	if (m_inListaAfazeres) RenderNotePad();
 
-	DrawButtons();
-
 	if (m_LoadNewScreen) LoadNewScreen();
 }
 
@@ -227,14 +240,15 @@ void Computer::Render() {
 void Computer::RenderNotePad(){
 	SDL_Rect auxRect = m_Notepad->getRect();
 
-	if (!m_ButtonsPtrMap["NotePadExit"]) {
-		m_ButtonsPtrMap["NotePadExit"] = new Button(auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20, [this]() {
+	if (!m_ButtonMngr->find("NotePadExit")) {
+		auto button1 = std::make_unique<Button>(auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20, [this]() {
 		m_inListaAfazeres = false;
 		m_Notepad.reset();		
-	});
+		});
 
+		m_ButtonMngr->addButton("NotePadExit", std::move(button1));
 	}else {
-		m_ButtonsPtrMap["NotePadExit"]->SetPosition(auxRect.x + auxRect.w - 20, auxRect.y + 5);
+		m_ButtonMngr->updatePosition("NotePadExit", auxRect.x + auxRect.w - 20, auxRect.y + 5);
 	}
 	
 	m_Notepad->Render(m_Rend, { auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20 });
@@ -280,24 +294,12 @@ void Computer::m_MouseWhell(const SDL_Event& e) {
 }
 
 void Computer::m_UpdtDinamicBtsState() {
-	auto altX = Global::resizeValue(20, Global::RESIZE_MODE_WIDTH);
-	auto altY = Global::resizeValue(20, Global::RESIZE_MODE_HEIGHT);
+	auto altX = Global::resizeValue(WINDOWSBAR_SIZE, Global::RESIZE_MODE_WIDTH);
+	auto altY = Global::resizeValue(WINDOWSBAR_SIZE, Global::RESIZE_MODE_HEIGHT);
 
 	for (auto& p : m_Textures) {
 		if (p.Scroll) {
-			for (auto& b : m_ButtonsPtrMap) {
-				if (p.srcRect.y - 5 <= b.second->GetRect().y + altX && b.second->GetRect().y + altY <= p.srcRect.y + p.srcRect.h) {
-					b.second->SetClicable(true);
-					b.second->SetVisible(true);
-
-					b.second->SetPosition(b.second->GetOriginRect().x, b.second->GetOriginRect().y - p.srcRect.y);
-				}
-				else {
-					b.second->SetVisible(false);
-					b.second->SetClicable(false);
-					b.second->ResetPosition();
-				}
-			}
+			m_ButtonMngr->updateDinamicButtons(p, altX, altY);
 		}
 	}
 }
@@ -315,7 +317,6 @@ void Computer::Events(const SDL_Event& e) {
 	// Atualiza os botões
 	// Sim, a função Update ta dentro do events :)
 	m_UpdtDinamicBtsState();
-	m_UpdateButtons(e);
 }
 
 // O parse do XML

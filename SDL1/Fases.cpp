@@ -49,7 +49,7 @@ void Fases::Render(SDL_Renderer* rend, Douglas* douglas)
 
 	SDL_SetRenderDrawColor(rend, 135, 206, 235, 255);
 
-	SDL_Rect backGroundRect = { 0, 0, windowWidth, windowHeight };
+	SDL_Rect backGroundRect = { 0, 0, Global::windowWidth, Global::windowHeight };
 
 	SDL_RenderFillRect(rend, &backGroundRect);
 
@@ -57,8 +57,8 @@ void Fases::Render(SDL_Renderer* rend, Douglas* douglas)
 
 	for (int y = 0; y < map.size(); y++) {
 		for (int x = 0; x < map[y].size(); x++) {
-			SDL_Rect renderQuad = { x * windowWidth / map[y].size(), y * windowHeight / map.size() ,
-				windowWidth / map[y].size(), windowHeight / map.size()};
+			SDL_Rect renderQuad = { x * Global::windowWidth / map[y].size(), y * Global::windowHeight / map.size() ,
+				Global::windowWidth / map[y].size(), Global::windowHeight / map.size()};
 
 			int32_t textureId = map[y][x];
 

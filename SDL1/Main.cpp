@@ -31,10 +31,9 @@ int main(int argc, char**argv) {
 	Game game;
 
 	// Verifica se inicializou corretamente
-	if (!game.Init("Seminario", DESIGN_WIDTH, DESIGN_HEIGHT)) {
+	if (!game.Init("Seminario", Global::DESIGN_WIDTH, Global::DESIGN_HEIGHT)) {
 		return -1;
-	}
-
+	
 
 	// Looping Principal
 	while (game.GetIsRunning()) {

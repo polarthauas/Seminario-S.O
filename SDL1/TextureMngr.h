@@ -45,6 +45,10 @@ public:
 		m_Textures.erase(id);	
 	}
 
+	void clean() {
+		m_Textures.clear();
+	}
+
 private:
 	SDL_Renderer* m_Rend;
 	std::unordered_map<std::string, std::unique_ptr<Texture>> m_Textures;

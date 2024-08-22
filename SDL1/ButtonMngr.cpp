@@ -1,5 +1,7 @@
 #include "ButtonMngr.h"
 
+#include "Computer.h"
+
 void ButtonMngr::addButton(const std::string& id, std::unique_ptr<Button> button)
 {
 	if (m_Buttons.find(id) != m_Buttons.end()) {
@@ -37,4 +39,35 @@ void ButtonMngr::updateAll(const SDL_Event& e)
 	for (const auto& b : m_Buttons) {
 		b.second->Update(e);
 	}
+}
+
+void ButtonMngr::updatePosition(const std::string& id, int x, int y)
+{
+	if (m_Buttons.find(id) == m_Buttons.end()) {
+		SDL_Log("Id: %s não encontrado", id);
+		return;
+	}
+
+	m_Buttons[id]->setPosition(x, y);
+}
+
+void ButtonMngr::updateDinamicButtons(PrintTexture& p, int border_sizeX, int border_sizeY)
+{
+	for (auto& b : m_Buttons) {
+		if (p.srcRect.y - 5 <= b.second->GetRect().y + border_sizeX && b.second->GetRect().y + border_sizeY <= p.srcRect.y + p.srcRect.h) {
+			b.second->SetClicable(true);
+			b.second->SetVisible(true);
+			b.second->setPosition(b.second->GetOriginRect().x, b.second->GetOriginRect().y - p.srcRect.y);
+		}
+		else {
+			b.second->SetVisible(false);
+			b.second->SetClicable(false);
+			b.second->ResetPosition();
+		}
+	}
+}
+
+bool ButtonMngr::find(const std::string id)
+{
+	return (m_Buttons.find(id) != m_Buttons.end());
 }

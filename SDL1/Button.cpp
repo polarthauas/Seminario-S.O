@@ -12,6 +12,8 @@ Button::Button(int x, int y, int width, int height, const std::function<void()>&
 
 void Button::Update(const SDL_Event& e)
 {
+	if (!m_Clicable) return;
+
 	int mouseX;
 	int mouseY;
 

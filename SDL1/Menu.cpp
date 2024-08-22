@@ -50,7 +50,7 @@ void Menu::Render() {
 
 	m_ButtonMngr->renderAll();
 
-	msgManager->Render(m_Renderer, "Seminario Douglas", { 0, 230, 0 }, windowWidth / 2 - 120, 50);
+	msgManager->Render(m_Renderer, "Seminario Douglas", { 0, 230, 0 }, Global::DESIGN_WIDTH / 2 - 120, 50);
 }
 
 bool Menu::isStartClicked() const{

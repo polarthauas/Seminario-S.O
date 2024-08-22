@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <string>
 
+struct PrintTexture;
+
 class ButtonMngr {
 public:
 	ButtonMngr(SDL_Renderer* rend, std::shared_ptr<TextureMngr> textureMngr)
@@ -20,6 +22,12 @@ public:
 	void renderAll();
 
 	void updateAll(const SDL_Event& e);
+
+	void updatePosition(const std::string& id, int x, int y);
+
+	void updateDinamicButtons(PrintTexture& p, int border_sizeX, int border_sizeY);
+
+	[[nodicard]] bool find(const std::string id);
 
 private:
 	SDL_Renderer* m_Rend;

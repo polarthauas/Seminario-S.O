@@ -294,8 +294,10 @@ void Game::controlGameMsgs(int cmd)
 			 
 			setGameState(GameState::INCOMPUTER);
 
-			m_Computer = std::make_unique<Computer>(m_Renderer);
+			m_Computer = std::make_unique<Computer>(m_Renderer, m_TextureMngr, m_ButtonMngr);
 			mouse = std::make_unique<Mouse>();
+
+			m_ButtonMngr->clean();
 
 			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
