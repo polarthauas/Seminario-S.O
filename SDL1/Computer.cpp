@@ -9,8 +9,9 @@
 Computer::Computer(SDL_Renderer* rend)
 	: m_ComputerState("WORKSPACE1"), m_Rend(rend)
 {
-	printRect = { calcAlterWindowSize(20, 'w'), calcAlterWindowSize(20, 'h'), 
-		windowWidth - calcAlterWindowSize(40, 'w'), windowHeight - calcAlterWindowSize(40, 'h') };
+	printRect = { Global::resizeValue(20, Global::RESIZE_MODE_WIDTH), Global::resizeValue(20, Global::RESIZE_MODE_HEIGHT), 
+		Global::windowWidth - Global::resizeValue(40, Global::RESIZE_MODE_WIDTH),
+		Global::windowHeight - Global::resizeValue(40, Global::RESIZE_MODE_HEIGHT) };
 
 	screenListaAfaz = { (printRect.x + printRect.w) / 2, (printRect.y + printRect.h) / 4, 448, 499 };
 
@@ -25,8 +26,8 @@ void Computer::m_LoadTexture() {
 	// Calcula a variação altX e altY por causa do tamanho da tela
 	// [DEPRECATED]
 
-	int altX = calcAlterWindowSize(20, 'w');
-	int altY = calcAlterWindowSize(20, 'h');
+	int altX = Global::resizeValue(20, Global::RESIZE_MODE_WIDTH);
+	int altY = Global::resizeValue(20, Global::RESIZE_MODE_HEIGHT);
 
 	// Destrói e limpa as texturas para serem colocadas novas
 	for (auto& p : m_Textures) {
@@ -62,24 +63,24 @@ void Computer::m_LoadTexture() {
 
 		// Cria a barra do windows
 
-		SDL_Rect bar = { altX, windowHeight - altY - calcAlterWindowSize(42, 'h'), windowWidth - 2 * altX, calcAlterWindowSize(42, 'h')};
+		SDL_Rect bar = { altX, Global::windowHeight - altY - getResizeWindow(42, 'h'), Global::windowWidth - 2 * altX, getResizeWindow(42, 'h')};
 
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_BAR"].c_str()), bar);
 
-		SDL_Rect rectLateral = { altX, altY, calcAlterWindowSize(320, 'w'), windowHeight - 2 * altY - bar.h};
+		SDL_Rect rectLateral = { altX, altY, getResizeWindow(320, 'w'), Global::windowHeight - 2 * altY - bar.h};
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_DEFENDERLATERAL"].c_str()), rectLateral);
-		SDL_Rect rectPrint = {altX+320, altY, windowWidth - calcAlterWindowSize(40, 'w') - 320, windowHeight - 2 * altY - bar.h};
+		SDL_Rect rectPrint = {altX+320, altY, Global::windowWidth - getResizeWindow(40, 'w') - 320, Global::windowHeight - 2 * altY - bar.h};
 		SDL_Rect srcPrint = { 0, 0, 1040, 728 };
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INWINDOWSDEFENDERVIRUS1"].c_str()), rectPrint, srcPrint, true, 1038);
 	}
 	else if (m_ComputerState == "INWINDOWSFIREWALL1") {
-		SDL_Rect bar = { altX, windowHeight - altY - calcAlterWindowSize(42, 'h'), windowWidth - 2 * altX, calcAlterWindowSize(42, 'h')};
+		SDL_Rect bar = { altX, Global::windowHeight - altY - getResizeWindow(42, 'h'), Global::windowWidth - 2 * altX, getResizeWindow(42, 'h')};
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_BAR"].c_str()), bar);
 
-		SDL_Rect rectLateral = { altX, altY, calcAlterWindowSize(320, 'w'), windowHeight - 2 * altY - bar.h};
+		SDL_Rect rectLateral = { altX, altY, getResizeWindow(320, 'w'), Global::windowHeight - 2 * altY - bar.h};
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_FIREWALL_LATERAL"].c_str()), rectLateral);
 
-		SDL_Rect rectPrint = {altX+320, altY, windowWidth - calcAlterWindowSize(40, 'w') - 320, windowHeight - 2 * altY - bar.h};
+		SDL_Rect rectPrint = {altX+320, altY, Global::windowWidth - getResizeWindow(40, 'w') - 320, Global::windowHeight - 2 * altY - bar.h};
 		SDL_Rect srcPrint = { 0, 0, 1080, 728 };
 		
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INWINDOWSFIREWALL1"].c_str()), rectPrint, srcPrint, true, 1080);
@@ -117,7 +118,7 @@ void Computer::m_LoadButtons()
 {
 	m_CleanButtonMap();
 
-	int alt = calcAlterWindowSize(20, 'w');
+	int alt = Global::resizeValue(20, Global::RESIZE_MODE_WIDTH);
 	
 	// ALERTA: MUITOS IF E ELSE
 
@@ -213,7 +214,7 @@ void Computer::m_RenderTextures() {
 // Cria a moldura do pc (a borda)
 void Computer::m_RenderMoldure() {
 	SDL_SetRenderDrawColor(m_Rend, 192, 192, 192, 255);
-	SDL_Rect backgroundRect = { 0, 0, windowWidth, windowHeight };
+	SDL_Rect backgroundRect = { 0, 0, Global::windowWidth, Global::windowHeight };
 	SDL_RenderFillRect(m_Rend, &backgroundRect);
 }
 
@@ -279,10 +280,13 @@ void Computer::m_MouseWhell(const SDL_Event& e) {
 }
 
 void Computer::m_UpdtDinamicBtsState() {
+	auto altX = Global::resizeValue(20, Global::RESIZE_MODE_WIDTH);
+	auto altY = Global::resizeValue(20, Global::RESIZE_MODE_HEIGHT);
+
 	for (auto& p : m_Textures) {
 		if (p.Scroll) {
 			for (auto& b : m_ButtonsPtrMap) {
-				if (p.srcRect.y - 5 <= b.second->GetRect().y + calcAlterWindowSize(20, 'h') && b.second->GetRect().y + calcAlterWindowSize(20, 'h') <= p.srcRect.y + p.srcRect.h) {
+				if (p.srcRect.y - 5 <= b.second->GetRect().y + altX && b.second->GetRect().y + altY <= p.srcRect.y + p.srcRect.h) {
 					b.second->SetClicable(true);
 					b.second->SetVisible(true);
 

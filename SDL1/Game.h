@@ -94,9 +94,6 @@ private:
 
 	GameState m_GameState{ GameState::INMENU };
 
-
-
-
 	std::vector<Button> m_Buttons;	
 	
 	int auxControlGame{ 0 };

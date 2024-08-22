@@ -41,8 +41,8 @@ public:
 
 	void ResetPosition();
 
-	inline void SetClicable(const bool c) { m_Clicable = c; }
-	inline void SetVisible(const bool v) { m_Visible = v; }
+	inline void SetClicable(bool c) { m_Clicable = c; }
+	inline void SetVisible(bool v) { m_Visible = v; }
 
 private:
 	SDL_Rect m_ButtonRect;

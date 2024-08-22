@@ -18,10 +18,8 @@ public:
 	void clean();
 
 	void renderAll();
-	void render(const std::string& id);
 
 	void updateAll(const SDL_Event& e);
-	void update(const SDL_Event& e, const std::string& id);
 
 private:
 	SDL_Renderer* m_Rend;

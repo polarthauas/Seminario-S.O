@@ -19,10 +19,12 @@ public:
 		_tex = IMG_LoadTexture(rend, file.c_str());
 	}
 
-	void draw(SDL_Renderer* rend, SDL_Rect* dstrect, SDL_Rect* srcRect = nullptr, const double angle = 0,
+	void draw(SDL_Renderer* rend, SDL_Rect* srcRect, SDL_Rect* dstRect = nullptr, const double angle = 0,
 		SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE ) {
 		
-		SDL_RenderCopyEx(rend, _tex, dstrect, srcRect, angle, center, flip);
+		if (SDL_RenderCopyEx(rend, _tex, srcRect, dstRect, angle, center, flip) != 0) {
+			SDL_Log("ERROOOO");
+		}
 	}
 
 	void clean() {

@@ -50,7 +50,10 @@ bool Game::Init(const char* title, int width, int height) {
 		return false;
 	}
 
-	SDL_GetWindowSize(m_Window, &windowWidth, &windowHeight);
+	SDL_GetWindowSize(m_Window, &Global::windowWidth, &Global::windowHeight);
+
+	Global::douglasWidth = Global::resizeValue(Global::DESIGN_DOUGLAS_WIDTH, Global::RESIZE_MODE_WIDTH);
+	Global::douglasHeight = Global::resizeValue(Global::DESIGN_DOUGLAS_WIDTH, Global::RESIZE_MODE_HEIGHT);
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
@@ -96,18 +99,19 @@ void Game::Event() {
 		if (m_GameState == GameState::INMENU) {
 			m_Menu->Events(e);
 			if (m_Menu->isStartClicked()) {
+				m_Menu.reset();
+				
 				setGameState(GameState::INGAME);
-				m_Douglas = std::make_unique<Douglas>(m_Renderer);
+				m_Douglas = std::make_unique<Douglas>(m_Renderer, m_TextureMngr);
 				m_Fases = std::make_unique<Fases>(m_Renderer);
 
 				m_QuestMngr = std::make_shared<QuestManager>();
 
-				m_Buttons.emplace_back(595, 256, 85, 128, [this]() {
+				auto button = std::make_unique<Button>(595, 256, 85, 128, [this]() {
 					m_TentouSair = true;
-				});
-				
-				m_Menu.reset();
-				
+					});
+
+				m_ButtonMngr->addButton("doorButton", std::move(button));
 			}
 			else if (m_Menu->isExitClicked()) {
 				m_IsRunning = false;
@@ -115,7 +119,6 @@ void Game::Event() {
 		}
 		else if (m_GameState == GameState::INGAME) {
 			m_Douglas->Event(e);
-			for (auto& p : m_Buttons) p.Update(e);
 
 			if (e.type == SDL_KEYDOWN) {
 				switch (e.key.keysym.sym) {
@@ -166,6 +169,7 @@ void Game::Event() {
 			}
 		}
 		if (m_QuestMenu) m_QuestMngr->Event(e);
+		m_ButtonMngr->updateAll(e);
 	}
 }
 
@@ -181,7 +185,6 @@ void Game::Render() {
 
 		controlGameMsgs(0);
 
-		for (auto& p : m_Buttons) p.Draw(m_Renderer);
 		if (m_TentouSair) m_MsgManager->Render(m_Renderer, "Tem nada pra fazer la fora não fi", { 255, 25, 56 }, 200, 300, true, true);
 
 	}	
@@ -191,6 +194,7 @@ void Game::Render() {
 		controlGameMsgs(0);
 	}
 
+	m_ButtonMngr->renderAll();
 	if (m_QuestMenu) m_QuestMngr->Render(m_Renderer);
 
 	SDL_RenderPresent(m_Renderer);
@@ -221,7 +225,7 @@ void Game::controlGameMsgs(int cmd)
 			m_Douglas->setState(DouglasState::LOOKING_FORWARD);
 			m_Douglas->setCanControl(false);
 			m_MsgManager->Render(m_Renderer, "Eae, tudo bem? Eu sou o Douglas \n(Ignore minha calvície, já vou fazer implante capilar)\nPressione enter para  continuar",
-				{ 0, 0, 0 }, calcAlterWindowSize(150, 'w'), calcAlterWindowSize(500, 'h') , true, true);
+				{ 0, 0, 0 }, 150, 500, true, true);
 		}
 		else if (cmd == 1) { auxControlGame++; m_MsgManager->setFontSize(30); }
  		
@@ -229,8 +233,8 @@ void Game::controlGameMsgs(int cmd)
 	case 1:
 		if (cmd == 0) {
 			m_MsgManager->Render(m_Renderer, "Vim ajudar na apresentação do trabalho sobre...",
-				{ 0, 0, 0 }, calcAlterWindowSize(150, 'w'),
-				calcAlterWindowSize(500, 'h') , true, true);
+				{ 0, 0, 0 }, 150,
+				500 , true, true);
 
 		}
 		else if (cmd == 1) auxControlGame++; 
@@ -252,17 +256,19 @@ void Game::controlGameMsgs(int cmd)
 				m_Renderer, 
 				"Vamos começar com a introdução sobre segurança\nPara isso vamos rodar o comando start ms-settings:windowsdefender",
 				{ 205, 0, 0 },
-				calcAlterWindowSize(100, 'w'), calcAlterWindowSize(500, 'h'), true, true
+				100, 500, true, true
 			);
 
 		} else if (cmd == 1) {
 			runCmd("start ms-settings:windowsdefender");
 			auxControlGame++;
 			m_QuestMngr->AddQuest(QuestType::Main, "Entre no pc", "Clique no pc que ele abre");
-			m_Buttons.emplace_back(85, 256, 85, 64, [this]() {
+			auto button = std::make_unique<Button>(85, 256, 85, 64, [this]() {
 				auxControlGame++;
 				m_QuestMngr->DropQuest("Entre no pc");
 			});
+
+			m_ButtonMngr->addButton("computerEnter", std::move(button));
 		}
 		break;
 
@@ -272,10 +278,10 @@ void Game::controlGameMsgs(int cmd)
 				m_Renderer, 
 				"Agora que foi dada a introdução do tema, vamos nos aprofundar mais...",
 				{ 0, 10, 56 },
-				calcAlterWindowSize(100, 'w'), calcAlterWindowSize(500, 'h'), true, true
+				100, 500, true, true
 			);
 			m_MsgManager->Render(m_Renderer, "Nova missão adicionada! Pressione M para acessar o menu de missões", { 255, 0, 0 },
-				calcAlterWindowSize(100, 'w'), calcAlterWindowSize(550, 'h'), true, false);
+				100, 550, true, false);
 
 		} else if (cmd == 1) {
 			m_Douglas->setCanControl(true);

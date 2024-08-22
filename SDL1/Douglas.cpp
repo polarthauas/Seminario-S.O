@@ -1,16 +1,16 @@
 #include "Douglas.h"
-#include "globals.h"
+#include "Globals.h"
+#include "TextureMngr.h"
 
 #include <string>
 #include <SDL2/SDL_image.h>
 
-Douglas::Douglas(SDL_Renderer* rend)
-	: m_DouglasState(DouglasState::IDLE_RIGHT), m_Cntx(rend)
+Douglas::Douglas(SDL_Renderer* rend, std::shared_ptr<TextureMngr> texturemngr )
+	: m_DouglasState(DouglasState::IDLE_RIGHT), m_Cntx(rend), m_TextureMngr(texturemngr)
 {
 	loadTextures();
 
-	douglasRect = { calcAlterWindowSize(200, 'w'), calcAlterWindowSize(280, 'h'), calcAlterWindowSize(DOUGLAS_WIDTH, 'w'),
-		calcAlterWindowSize(DOUGLAS_HEIGHT, 'h') };
+	douglasRect = { 200, 280, Global::douglasWidth, Global::douglasHeight };
 }
 
 Douglas::~Douglas()
@@ -31,8 +31,22 @@ void Douglas::setState(DouglasState newState)
 		m_DouglasState = newState;
 		currentFrame = 0;
 		lastFrameTime = SDL_GetTicks();
-
-		loadTextures();
+		
+		switch (m_DouglasState)
+		{
+		case DouglasState::WALKING_RIGHT:
+		case DouglasState::WALKING_LEFT:
+			idTex = DOUGLAS_WALKING;
+			break;
+		case DouglasState::IDLE_RIGHT:
+		case DouglasState::IDLE_LEFT:
+			idTex = DOUGLAS_IDLE;
+			break;
+		case DouglasState::LOOKING_FORWARD:
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -64,41 +78,8 @@ bool Douglas::moveTo(int8_t dx, int x)
 
 void Douglas::loadTextures()
 {
-	freeTexture();
-
-	std::string filename;
-	SDL_Texture* texture;
-	switch (m_DouglasState) {
-	case DouglasState::WALKING_LEFT:
-	case DouglasState::WALKING_RIGHT:
-		for (int i = 0; i < 3; i++) {
-			filename = "../imgs/Douglas/" + std::to_string(i) + ".png";
-
-			texture = IMG_LoadTexture(m_Cntx, filename.c_str());
-			sprites.push_back(texture);
-		}
-		break;
-	case DouglasState::IDLE_LEFT:
-	case DouglasState::IDLE_RIGHT:
-		for (int i = 3; i < 6; i++) {
-			filename = "../imgs/Douglas/" + std::to_string(i) + ".png";
-
-			texture = IMG_LoadTexture(m_Cntx, filename.c_str());
-			sprites.push_back(texture);
-		}
-		break;
-	case DouglasState::LOOKING_FORWARD:
-		for (int i = 6; i < 8; i++) {
-			filename = "../imgs/Douglas/" + std::to_string(i) + ".png";
-
-			texture = IMG_LoadTexture(m_Cntx, filename.c_str());
-			sprites.push_back(texture);
-		}
-		break;
-
-	default:
-		break;
-	}
+	m_TextureMngr->loadTex(DOUGLAS_WALKING, "../imgs/Douglas/Walking.png");
+	m_TextureMngr->loadTex(DOUGLAS_IDLE, "../imgs/Douglas/Idle.png");
 }
 
 // A FÍSICA TA UMA MERDAAAAA
@@ -114,26 +95,22 @@ void Douglas::Update()
 		switch (m_DouglasState) {
 		case DouglasState::WALKING_LEFT:
 		case DouglasState::WALKING_RIGHT:
-			spriteCount = 3;  // Espera-se 3 sprites para WALKING_LEFT e WALKING_RIGHT
+			spriteCount = 4;  
 			break;
 		case DouglasState::IDLE_LEFT:
 		case DouglasState::IDLE_RIGHT:
-			spriteCount = 3;  // Espera-se 3 sprites para IDLE_LEFT e IDLE_RIGHT
+			spriteCount = 2; 
 			break;
 		case DouglasState::LOOKING_FORWARD:
-			spriteCount = 2;  // Espera-se 2 sprites para LOOKING_FORWARD
+			spriteCount = 2; 
 			break;
 		default:
 			break;
 		}
 
-		if (spriteCount > 0 && !sprites.empty()) {
-			// Atualize o frame atual com base no número de sprites disponíveis
-			if (sprites.size() >= spriteCount) {
-				currentFrame = (currentFrame + 1) % spriteCount;
-			}
-			lastFrameTime = currentTime;
-		}
+		// Atualize o frame atual com base no número de sprites disponíveis
+		currentFrame = (currentFrame + 1) % spriteCount;
+		lastFrameTime = currentTime;
 	}
 
 	if (input_x == 1) douglasRect.x += speed;
@@ -156,6 +133,7 @@ void Douglas::Event(const SDL_Event& e) {
 	if (!canControl) {
 		return;
 	}
+
 	if (e.type == SDL_KEYDOWN) {
 		switch (e.key.keysym.sym)
 		{
@@ -199,9 +177,7 @@ void Douglas::Render()
 		flip = SDL_FLIP_HORIZONTAL;
 	}
 
-	if (SDL_RenderCopyEx(m_Cntx, sprites[currentFrame], nullptr, &douglasRect, 0, nullptr, flip) != 0) {
-		SDL_Log(SDL_GetError());
-	}
+	m_TextureMngr->drawFrame(idTex, douglasRect, currentFrame, 0, 12, 14, flip);
 }
 
 void Douglas::freeTexture()

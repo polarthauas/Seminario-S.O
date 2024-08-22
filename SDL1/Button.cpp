@@ -6,7 +6,7 @@ Button::Button(int x, int y, int width, int height, const std::function<void()>&
 	: m_OnClick(onClick)
 {
 	// Ajusta conforme a resolução :)
-	m_ButtonRect = { calcAlterWindowSize(x, 'w'), calcAlterWindowSize(y, 'h'), calcAlterWindowSize(width, 'w'), calcAlterWindowSize(height, 'h') };
+	m_ButtonRect = { Global::resizeValue(x, Global::RESIZE_MODE_WIDTH), Global::resizeValue(y, Global::RESIZE_MODE_HEIGHT), Global::resizeValue(width, Global::RESIZE_MODE_WIDTH), Global::resizeValue(height, Global::RESIZE_MODE_HEIGHT) };
 	m_OriginRect = m_ButtonRect;
 }
 
@@ -17,7 +17,7 @@ void Button::Update(const SDL_Event& e)
 
 	SDL_GetMouseState(&mouseX, &mouseY);
 
-	const bool isInside = mouseX > m_ButtonRect.x && mouseY > m_ButtonRect.y && mouseX < m_ButtonRect.x + m_ButtonRect.w && mouseY < m_ButtonRect.y + m_ButtonRect.h;
+	const bool isInside = Global::clickedRect(mouseX, mouseY, m_ButtonRect);
 
 	if (!isInside) {
 		m_IsClicked = false;

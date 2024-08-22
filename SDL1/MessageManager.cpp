@@ -34,6 +34,10 @@ bool MessageManager::setFont(const std::string& fontPath, int fontSize)
 void MessageManager::Render(SDL_Renderer* rend, const std::string& message, SDL_Color textColor, int x, int y,  bool square, bool tex)
 {
     // Dividir o texto em linhas
+
+    auto X = Global::resizeValue(x, Global::RESIZE_MODE_WIDTH);
+    auto Y = Global::resizeValue(y, Global::RESIZE_MODE_HEIGHT);
+
     std::istringstream stream(message);
     std::string line;
     std::vector<std::string> lines;
@@ -42,10 +46,10 @@ void MessageManager::Render(SDL_Renderer* rend, const std::string& message, SDL_
     }
 
     int lineHeight = TTF_FontLineSkip(font);
-    int currentY = y;
+    int currentY = Y;
 
     if (square) {
-        // Renderizar o fundo para o texto
+        // Renderizar o fundo para o teXto
         int maxWidth = 0;
         for (const auto& l : lines) {
             SDL_Surface* tmp_Surface = TTF_RenderText_Blended(font, l.c_str(), textColor);
@@ -55,7 +59,7 @@ void MessageManager::Render(SDL_Renderer* rend, const std::string& message, SDL_
             }
         }
         SDL_SetRenderDrawColor(rend, 255, 255, 255, 255); // Branco
-        SDL_Rect backgroundRect = { x - 20, y - 20, maxWidth + 40, lineHeight * lines.size() + 30 };
+        SDL_Rect backgroundRect = { X - 20, Y - 20, maxWidth + 40, lineHeight * lines.size() + 30 };
         SDL_RenderFillRect(rend, &backgroundRect);
     }
 
@@ -70,25 +74,27 @@ void MessageManager::Render(SDL_Renderer* rend, const std::string& message, SDL_
             continue;
         }
 
-        SDL_Rect destRect = { x, currentY, tmp_Surface->w, tmp_Surface->h };
+        SDL_Rect destRect = { X, currentY, tmp_Surface->w, tmp_Surface->h };
         SDL_RenderCopy(rend, texture, nullptr, &destRect);
 
         // Limpa recursos
         SDL_FreeSurface(tmp_Surface);
         SDL_DestroyTexture(texture);
 
-        currentY += lineHeight; // Mover para a próxima linha
+        currentY += lineHeight; // Mover para a próXima linha
     }
 
     if (tex) {
-        auto SDL_Tex = IMG_LoadTexture(rend, pathTex.c_str());
-        auto w = calcAlterWindowSize(DOUGLAS_WIDTH, 'w');
-        auto h = calcAlterWindowSize(DOUGLAS_HEIGHT, 'h');
+        auto _tex = IMG_LoadTexture(rend, pathTex.c_str());
+        auto w = Global::douglasWidth;
+        auto h = Global::douglasHeight;
 
-        SDL_Rect auxRect = { x - w - 20, y, w, h};
-        if (SDL_RenderCopy(rend, SDL_Tex, nullptr, &auxRect) < 0) {
+        SDL_Rect auxRect = { x - w - 20, Y, w, h};
+        if (SDL_RenderCopy(rend, _tex, nullptr, &auxRect) < 0) {
             SDL_Log(SDL_GetError());
         }
+
+        SDL_DestroyTexture(_tex);
     }
 }
 

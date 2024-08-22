@@ -2,19 +2,26 @@
 
 struct SDL_Rect;
 
-#define DESIGN_WIDTH 1360
-#define DESIGN_HEIGHT 768
-
-extern int windowWidth, windowHeight;
-
 //Padrão 800x600
 
 #define BLOCK_WIDTH 50
 #define BLOCK_HEIGHT 50
 
-#define DOUGLAS_WIDTH 32
-#define DOUGLAS_HEIGHT 32
+namespace Global{
+	enum RESIZE_MODE {
+		RESIZE_MODE_WIDTH,
+		RESIZE_MODE_HEIGHT
+	};
 
-int calcAlterWindowSize(int a, char mode);
+	extern int windowWidth, windowHeight;
+	extern int douglasWidth, douglasHeight;
 
-bool clickedRect(int x, int y, SDL_Rect b);
+	const int DESIGN_WIDTH = 1360;
+	const int DESIGN_HEIGHT = 768;
+	const int DESIGN_DOUGLAS_WIDTH = 32;
+	const int DESIGN_DOUGLAS_HEIGHT = 32;
+
+	int resizeValue(int a, RESIZE_MODE mode);
+
+	bool clickedRect(int x, int y, SDL_Rect b);
+}

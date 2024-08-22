@@ -23,9 +23,17 @@ public:
 		m_Textures[id] = std::move(texture);
 	}
 
-	void draw(const std::string& id, SDL_Rect* dstRect, SDL_Rect* srcRect, const double angle = 0,
+	void drawFrame(const std::string id, SDL_Rect& rect, int frame, int row, int sizeX, int sizeY,
+		const SDL_RendererFlip flip = SDL_FLIP_NONE, const double angle = 0U) {
+
+		SDL_Rect src = {frame*sizeX, row*sizeY, sizeX, sizeY};
+		
+		m_Textures[id]->draw(m_Rend, &src, &rect, angle, nullptr, flip);
+	}
+
+	void draw(const std::string& id, SDL_Rect* srcRect, SDL_Rect* dstRect, const double angle = 0,
 		SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE) {
-		m_Textures[id]->draw(m_Rend, dstRect, srcRect, angle, center, flip);
+		m_Textures[id]->draw(m_Rend, srcRect, dstRect, angle, center, flip);
 	}
 
 	void dropTex(const std::string& id) {

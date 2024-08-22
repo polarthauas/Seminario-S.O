@@ -9,6 +9,13 @@
 
 #include <vector>
 #include <SDl2/SDL.h>
+#include <memory>
+#include <string>
+
+#define DOUGLAS_WALKING "douglasWalking"
+#define DOUGLAS_IDLE "douglasIdle"
+
+class TextureMngr;
 
 // Enum para os estados do jogador
 enum class DouglasState
@@ -23,7 +30,7 @@ enum class DouglasState
 
 class Douglas {
 public:
-	explicit Douglas(SDL_Renderer* rend);
+	Douglas(SDL_Renderer* rend, std::shared_ptr<TextureMngr> texturemngr);
 	
 	~Douglas();
 
@@ -67,6 +74,8 @@ public:
 private:
 	// PRECISA DE REWORK URGENTE!
 
+	std::string idTex{ DOUGLAS_IDLE };
+
 	DouglasState m_DouglasState;
 
 	SDL_Renderer* m_Cntx;
@@ -98,6 +107,9 @@ private:
 	uint32_t lastUpdateTime{ 0 };
 
 	int8_t input_x{ 0 };
+
+
+	std::shared_ptr<TextureMngr> m_TextureMngr;
 
 	void loadTextures();
 
