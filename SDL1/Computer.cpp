@@ -110,7 +110,7 @@ void Computer::LoadNewScreen()
 	m_LoadNewScreen = false;
 }
 
-void Computer::m_CleanButtonMap() {
+inline void Computer::m_CleanButtonMap() {
 	m_ButtonMngr->clean();
 }
 
@@ -118,8 +118,6 @@ void Computer::m_LoadButtons()
 {
 	m_CleanButtonMap();
 
-	int alt = Global::resizeValue(20, Global::RESIZE_MODE_WIDTH);
-	
 	// ALERTA: MUITOS IF E ELSE
 
 	if (m_ComputerState == "WORKSPACE2") {
@@ -139,7 +137,7 @@ void Computer::m_LoadButtons()
 			setState("INSETTINGS1");
 		});
 
-		auto button4 = std::make_unique<Button>(alt + 75, alt, 75, 75, [this]() {
+		auto button4 = std::make_unique<Button>(BORDER_SIZE + 75, BORDER_SIZE, 75, 75, [this]() {
 			m_inSecretPasta = true;
 		});
 		
@@ -211,11 +209,11 @@ void Computer::m_RenderTextures() {
 	for (auto& p : m_Textures) {
 		if (p.srcRect.w == 0) {
 			SDL_RenderCopy(m_Rend, p.Tex, nullptr, &p.dstRect);
+			continue;
 		}
-		else {
-			if (SDL_RenderCopy(m_Rend, p.Tex, &p.srcRect, &p.dstRect) != 0) {
-				SDL_Log(SDL_GetError());
-			}
+		
+		if (SDL_RenderCopy(m_Rend, p.Tex, &p.srcRect, &p.dstRect) != 0) {
+			SDL_Log(SDL_GetError());
 		}
 	}
 
@@ -251,12 +249,12 @@ void Computer::RenderNotePad(){
 		m_ButtonMngr->updatePosition("NotePadExit", auxRect.x + auxRect.w - 20, auxRect.y + 5);
 	}
 	
-	m_Notepad->Render(m_Rend, { auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20 });
+	m_Notepad->render(m_Rend, { auxRect.x + auxRect.w - 20, auxRect.y + 5, 20, 20 });
 }
 
 // Eventos:
 
-void Computer::m_MouseInComputer() {
+void Computer::MouseInComputer() {
 	// Verificador simples
 	int x;
 	int y;
@@ -275,7 +273,7 @@ void Computer::m_MouseInComputer() {
 
 
 // Gerencia o Comportamento do Scroll do Mouse
-void Computer::m_MouseWhell(const SDL_Event& e) {
+void Computer::MouseWhell(const SDL_Event& e) {
 	if (e.type == SDL_MOUSEWHEEL) {
 		for (auto& p : m_Textures) {
 			if (p.Scroll) {
@@ -306,13 +304,13 @@ void Computer::m_UpdtDinamicBtsState() {
 
 // Função geral dos Events
 void Computer::Events(const SDL_Event& e) {
-	m_MouseInComputer();
+	MouseInComputer();
 
 	// Lista de Afazeres dhr
 	if (m_inListaAfazeres) m_Notepad->Events(e);
 	
 	// Atualiza o scroll do mouse
-	m_MouseWhell(e);
+	MouseWhell(e);
 
 	// Atualiza os botões
 	// Sim, a função Update ta dentro do events :)

@@ -2,12 +2,17 @@
 #include "Globals.h"
 #include "Douglas.h"
 #include "Fases.h"
-#include "MessageManager.h"
 #include "mouse.h"
 #include "Menu.h"
 #include "Computer.h"
 
-#include "Button.h"
+// Managers
+#include "MessageManager.h"
+#include "SoundMngr.h"
+#include "ButtonMngr.h"
+#include "QuestManager.h"
+#include "TextAnimMngr.h"
+#include "TextureMngr.h"
 
 #include <iostream>
 #include <cstdlib>	
@@ -57,16 +62,18 @@ bool Game::Init(const char* title, int width, int height) {
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-	m_MsgManager = std::make_unique<MessageManager>();
+	m_MsgManager = std::make_shared<MessageManager>();
 	m_TextureMngr = std::make_shared<TextureMngr>(m_Renderer);
 	m_ButtonMngr = std::make_shared<ButtonMngr>(m_Renderer, m_TextureMngr);
+	m_SoundMngr = std::make_shared<SoundMngr>();
+	m_TextAnimMngr = std::make_shared<Text::TextAnimMngr>();
 
 	if (!m_MsgManager->setFont("../fonts/Roboto-Regular.ttf", 30)) {
 		SDL_Log("Erro ao carregar a fonte");
 		return false;
 	}
 
-	m_Menu = std::make_unique<Menu>(m_Renderer, m_TextureMngr, m_ButtonMngr);
+	m_Menu = std::make_unique<Menu>(m_Renderer, m_TextureMngr, m_ButtonMngr, m_SoundMngr);
 
 	return m_IsRunning = true;
 }
@@ -82,8 +89,17 @@ void Game::runCmd(const std::string& cmd) const
 
 void Game::cleanUp() {
 	m_Menu.reset();
+	m_Douglas.reset();
 	m_Computer.reset();
+	m_Fases.reset();
+
+	m_TextAnimMngr.reset();
+
+	m_ButtonMngr.reset();
+	
 	m_MsgManager.reset();
+	m_SoundMngr.reset();
+	m_TextureMngr.reset();
 
 	if (m_Renderer) SDL_DestroyRenderer(m_Renderer);
 	if (m_Window) SDL_DestroyWindow(m_Window);
@@ -106,6 +122,8 @@ void Game::Event() {
 				m_Fases = std::make_unique<Fases>(m_Renderer);
 
 				m_QuestMngr = std::make_shared<QuestManager>();
+				
+				m_TextAnimMngr->addTextAnimation("message1", { "Ola, eu sou o Douglas\n(Ignore minha calvície, já vou fazer implante capilar)", {0, 0, 0}, 150, 500}, true, true);
 
 				auto button = std::make_unique<Button>(595, 256, 85, 128, [this]() {
 					m_TentouSair = true;
@@ -128,7 +146,7 @@ void Game::Event() {
 
 					auxControlGame = 0;
 
-					m_Menu = std::make_unique<Menu>(m_Renderer, m_TextureMngr, m_ButtonMngr);	
+					m_Menu = std::make_unique<Menu>(m_Renderer, m_TextureMngr, m_ButtonMngr, m_SoundMngr);	
 
 					setGameState(GameState::INMENU);
 					break;
@@ -185,7 +203,7 @@ void Game::Render() {
 
 		controlGameMsgs(0);
 
-		if (m_TentouSair) m_MsgManager->Render(m_Renderer, "Tem nada pra fazer la fora não fi", { 255, 25, 56 }, 200, 300, true, true);
+		if (m_TentouSair) m_MsgManager->render(m_Renderer, "Tem nada pra fazer la fora não fi", { 255, 25, 56 }, 200, 300, true, true);
 
 	}	
 	else if (m_GameState == GameState::INCOMPUTER) {
@@ -195,6 +213,7 @@ void Game::Render() {
 	}
 
 	m_ButtonMngr->renderAll();
+	m_TextAnimMngr->renderAll(m_Renderer, m_MsgManager);
 	if (m_QuestMenu) m_QuestMngr->Render(m_Renderer);
 
 	SDL_RenderPresent(m_Renderer);
@@ -204,10 +223,12 @@ void Game::Update()
 {
 	frameStart = SDL_GetTicks();
 
+	m_TextAnimMngr->updateAll(m_SoundMngr);
+
 	if (m_GameState == GameState::INGAME) {
 		m_Douglas->Update();
 	}
-		
+
 	frameTime = SDL_GetTicks() - frameStart;
 
 	if (1000 / 60 > frameTime) {
@@ -217,31 +238,38 @@ void Game::Update()
 
 void Game::controlGameMsgs(int cmd)
 {
-	m_MsgManager->setPathTex("../imgs/Douglas/7.png");
+	m_MsgManager->setPathTex("Assets/Douglas/7.png");
 	switch (auxControlGame) {
 	
 	case 0:
 		if (cmd == 0) {
 			m_Douglas->setState(DouglasState::LOOKING_FORWARD);
 			m_Douglas->setCanControl(false);
-			m_MsgManager->Render(m_Renderer, "Eae, tudo bem? Eu sou o Douglas \n(Ignore minha calvície, já vou fazer implante capilar)\nPressione enter para  continuar",
-				{ 0, 0, 0 }, 150, 500, true, true);
 		}
-		else if (cmd == 1) { auxControlGame++; m_MsgManager->setFontSize(30); }
+		else if (cmd == 1) {
+			auxControlGame++;
+			m_MsgManager->setFontSize(30);
+			m_TextAnimMngr->clean();
+			m_TextAnimMngr->addTextAnimation("message2", { "Vim ajudar na apresentação sobre...", {0, 0, 0}, 150, 500 }, true, true);
+		}
  		
 		break;
 	case 1:
 		if (cmd == 0) {
-			m_MsgManager->Render(m_Renderer, "Vim ajudar na apresentação do trabalho sobre...",
+			/*m_MsgManager->render(m_Renderer, "Vim ajudar na apresentação do trabalho sobre...",
 				{ 0, 0, 0 }, 150,
-				500 , true, true);
+				500 , true, true);*/
 
 		}
-		else if (cmd == 1) auxControlGame++; 
+		else if (cmd == 1) {
+			auxControlGame++;
+			m_TextAnimMngr->clean();
+			m_TextAnimMngr->addTextAnimation("message3", { "Configurações de Segurança e Privacidade no Windows", { 255, 0, 255 }, 150, 50 }, true, true);
+		}
 		break;
 	case 2:
 		if (cmd == 0) {
-			m_MsgManager->Render(m_Renderer, "Configurações de Segurança e Privacidade no Windows", { 255, 0, 255 }, 150, 50);
+			m_MsgManager->render(m_Renderer, "Configurações de Segurança e Privacidade no Windows", { 255, 0, 255 }, 150, 50);
 			
 		}
 		else if (cmd == 1) {
@@ -252,7 +280,7 @@ void Game::controlGameMsgs(int cmd)
 	
 	case 3:
 		if (cmd == 0) {
-			m_MsgManager->Render(
+			m_MsgManager->render(
 				m_Renderer, 
 				"Vamos começar com a introdução sobre segurança\nPara isso vamos rodar o comando start ms-settings:windowsdefender",
 				{ 205, 0, 0 },
@@ -274,13 +302,13 @@ void Game::controlGameMsgs(int cmd)
 
 	case 4:
 		if (cmd == 0) {
-			m_MsgManager->Render(
+			m_MsgManager->render(
 				m_Renderer, 
 				"Agora que foi dada a introdução do tema, vamos nos aprofundar mais...",
 				{ 0, 10, 56 },
 				100, 500, true, true
 			);
-			m_MsgManager->Render(m_Renderer, "Nova missão adicionada! Pressione M para acessar o menu de missões", { 255, 0, 0 },
+			m_MsgManager->render(m_Renderer, "Nova missão adicionada! Pressione M para acessar o menu de missões", { 255, 0, 0 },
 				100, 550, true, false);
 
 		} else if (cmd == 1) {
@@ -306,7 +334,7 @@ void Game::controlGameMsgs(int cmd)
 		break;
 	case 7:
 		if (cmd == 0) {
-			m_MsgManager->Render(m_Renderer, "Aiai, novamente estou no pc, vamos navegar na internet", {0, 0, 0}, 160, 100,
+			m_MsgManager->render(m_Renderer, "Aiai, novamente estou no pc, vamos navegar na internet", {0, 0, 0}, 160, 100,
 				true, true);
 		}
 		else if (cmd == 1) {
@@ -320,7 +348,7 @@ void Game::controlGameMsgs(int cmd)
 
 			m_Computer->setState("INFIREFOXY1");
 			
-			m_MsgManager->Render(m_Renderer, "Vou pesquisar sobre o tratamento da calvice...", {0, 0, 0}, 250, 100,
+			m_MsgManager->render(m_Renderer, "Vou pesquisar sobre o tratamento da calvice...", {0, 0, 0}, 250, 100,
 				true, true);
 		}
 		else if (cmd == 1) {
@@ -330,7 +358,7 @@ void Game::controlGameMsgs(int cmd)
 		break;
 	case 9:
 		if (cmd == 0) {
-			m_MsgManager->Render(m_Renderer, "Agora basta dar enter para eu ter acesso ao tratamento SUPREMO contra a calvice", { 230, 50, 0 }, 250, 100,
+			m_MsgManager->render(m_Renderer, "Agora basta dar enter para eu ter acesso ao tratamento SUPREMO contra a calvice", { 230, 50, 0 }, 250, 100,
 				true, true);
 		}
 		else if (cmd == 1) {
@@ -341,7 +369,7 @@ void Game::controlGameMsgs(int cmd)
 		break;
 	case 10:
 		if (cmd == 0) {
-			m_MsgManager->Render(m_Renderer, "Oh não, sabia que eu não deveria ter clicado no baner\n Mães solteiras que curam calvicie a 5km de você e desligado o windows defender",
+			m_MsgManager->render(m_Renderer, "Oh não, sabia que eu não deveria ter clicado no baner\n Mães solteiras que curam calvicie a 5km de você e desligado o windows defender",
 				{ 255, 0, 255 }, 100, 50, true, true);
 		} if (cmd == 1) {
 			auxControlGame++;
@@ -349,7 +377,7 @@ void Game::controlGameMsgs(int cmd)
 		break;
 	case 11:
 		if (cmd == 0) {
-			m_MsgManager->Render(m_Renderer, "Agora vou formatar o windows, ja volto...", {25, 50, 50},
+			m_MsgManager->render(m_Renderer, "Agora vou formatar o windows, ja volto...", {25, 50, 50},
 				250, 50, true, true);
 		}
 		else if (cmd == 1) {
@@ -362,7 +390,7 @@ void Game::controlGameMsgs(int cmd)
 		break;
 	case 12:
 		if (cmd == 0) {
-			m_MsgManager->Render(m_Renderer,
+			m_MsgManager->render(m_Renderer,
 				"Agora que EU formatei o Windows EU preciso de sua\najuda para configurar corretamente o WINDOWS DEFENDER e a manter minha privacidade,\nagora VOCÊ tem permissão para CONTROLAR o MEU pc\nMúltiplas missões adicionadas!",
 				{255, 0 , 0}, 250, 500, true, true);
 		}

@@ -11,15 +11,15 @@
 
 Fases::Fases(SDL_Renderer* rend)
 {
-	m_TexturesPathMap[-2] = "../imgs/Game/stone.png";
-	m_TexturesPathMap[-1] = "../imgs/Game/dirt.png";
-	m_TexturesPathMap[1] = "../imgs/Game/gram.png";
-	m_TexturesPathMap[2] = "../imgs/Game/wood.png";
-	m_TexturesPathMap[3] = "../imgs/Game/doorInf.png";
-	m_TexturesPathMap[4] = "../imgs/Game/doorSup.png";
-	m_TexturesPathMap[5] = "../imgs/Game/dark_oak_wood.png";
-	m_TexturesPathMap[6] = "../imgs/Game/computer.png";
-	m_TexturesPathMap[7] = "../imgs/Game/craftingTable.png";
+	m_TexturesPathMap[-2] = "Assets/Game/stone.png";
+	m_TexturesPathMap[-1] = "Assets/Game/dirt.png";
+	m_TexturesPathMap[1] = "Assets/Game/gram.png";
+	m_TexturesPathMap[2] = "Assets/Game/wood.png";
+	m_TexturesPathMap[3] = "Assets/Game/doorInf.png";
+	m_TexturesPathMap[4] = "Assets/Game/doorSup.png";
+	m_TexturesPathMap[5] = "Assets/Game/dark_oak_wood.png";
+	m_TexturesPathMap[6] = "Assets/Game/computer.png";
+	m_TexturesPathMap[7] = "Assets/Game/craftingTable.png";
 
 	loadMap(1);
 

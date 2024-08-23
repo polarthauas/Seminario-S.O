@@ -34,6 +34,12 @@
     <Filter Include="Arquivos de Cabeçalho\Managers">
       <UniqueIdentifier>{b8daa655-e6cd-47f5-9be6-f8ef938364ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Arquivos de Origem\Text">
+      <UniqueIdentifier>{0af7a0ee-d06a-43d7-b7e6-06d98a21760c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho\Text">
+      <UniqueIdentifier>{ee05505d-f025-4df8-8391-adf84fba00aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Globals.cpp">
@@ -73,6 +79,12 @@
       <Filter>Arquivos de Origem\Managers</Filter>
     </ClCompile>
     <ClCompile Include="ButtonMngr.cpp">
+      <Filter>Arquivos de Origem\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="TextAnimLetterByLetter.cpp">
+      <Filter>Arquivos de Origem\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundMngr.cpp">
       <Filter>Arquivos de Origem\Managers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -120,6 +132,18 @@
       <Filter>Arquivos de Cabeçalho\Managers</Filter>
     </ClInclude>
     <ClInclude Include="QuestManager.h">
+      <Filter>Arquivos de Cabeçalho\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TextAnimMngr.h">
+      <Filter>Arquivos de Cabeçalho\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextAnimLetterByLetter.h">
+      <Filter>Arquivos de Cabeçalho\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextAnimation.h">
+      <Filter>Arquivos de Cabeçalho\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundMngr.h">
       <Filter>Arquivos de Cabeçalho\Managers</Filter>
     </ClInclude>
   </ItemGroup>

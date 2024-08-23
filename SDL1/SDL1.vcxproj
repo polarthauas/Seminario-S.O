@@ -147,6 +147,8 @@
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="Notepad.cpp" />
     <ClCompile Include="QuestManager.cpp" />
+    <ClCompile Include="SoundMngr.cpp" />
+    <ClCompile Include="TextAnimLetterByLetter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -162,6 +164,10 @@
     <ClInclude Include="Notepad.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="QuestManager.h" />
+    <ClInclude Include="SoundMngr.h" />
+    <ClInclude Include="TextAnimation.h" />
+    <ClInclude Include="TextAnimLetterByLetter.h" />
+    <ClInclude Include="TextAnimMngr.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureMngr.h" />
   </ItemGroup>

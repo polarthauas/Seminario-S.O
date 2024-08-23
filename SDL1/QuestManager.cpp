@@ -23,7 +23,7 @@ void QuestManager::Render(SDL_Renderer* rend)
 	RenderMoldure(rend);
 	RenderQuests(rend);
 	
-	m_MsgManager->Render(rend, "Quests", { 255, 0, 0 }, Global::DESIGN_WIDTH / 2 - 50, Global::DESIGN_HEIGHT / 2 - 176);
+	m_MsgManager->render(rend, "Quests", { 255, 0, 0 }, Global::DESIGN_WIDTH / 2 - 50, Global::DESIGN_HEIGHT / 2 - 176);
 }
 
 void QuestManager::RenderQuests(SDL_Renderer* rend) {
@@ -35,7 +35,7 @@ void QuestManager::RenderQuests(SDL_Renderer* rend) {
 		SDL_Rect questRect = Global::resizeRect({Global::DESIGN_WIDTH / 2 - 230, Global::DESIGN_HEIGHT / 2 - 75 - 55 * (2-auxCount), 400, 50});
 		SDL_RenderFillRect(rend, &questRect);
 
-		m_MsgManager->Render(rend, m_Quests[i]->GetTitle(), {0, 255, 0}, Global::DESIGN_WIDTH / 2 - 200, Global::DESIGN_HEIGHT / 2 - 70 - (55 * (2 - auxCount)));
+		m_MsgManager->render(rend, m_Quests[i]->GetTitle(), {0, 255, 0}, Global::DESIGN_WIDTH / 2 - 200, Global::DESIGN_HEIGHT / 2 - 70 - (55 * (2 - auxCount)));
 		auxCount++;
 	}
 }

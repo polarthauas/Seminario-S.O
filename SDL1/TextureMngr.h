@@ -23,7 +23,7 @@ public:
 		m_Textures[id] = std::move(texture);
 	}
 
-	void drawFrame(const std::string id, SDL_Rect& rect, int frame, int row, int sizeX, int sizeY,
+	void drawFrame(const std::string& id, SDL_Rect& rect, int frame, int row, int sizeX, int sizeY,
 		const SDL_RendererFlip flip = SDL_FLIP_NONE, const double angle = 0U) {
 
 		SDL_Rect src = {frame*sizeX, row*sizeY, sizeX, sizeY};

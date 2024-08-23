@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Main>
 	<Computer>
-		<Texture id="WORKSPACE1" pathfile="../imgs/Game/prints/Area_Trabalho_1.png"></Texture>
-		<Texture id="WORKSPACE2" pathfile="../imgs/Game/prints/Area_Trabalho_2.png"></Texture>
-		<Texture id="INFIREFOXY1" pathfile="../imgs/Game/prints/Navegador_1.png"></Texture>
-		<Texture id="INFIREFOXY2" pathfile="../imgs/Game/prints/Navegador_2.png"></Texture>
-		<Texture id="BLUESCREEN" pathfile="../imgs/Game/prints/Tela_Azul.png"></Texture>
-		<Texture id="INSETTINGS1" pathfile="../imgs/Game/prints/Settings_1.png"></Texture>
-		<Texture id="INWINDOWSDEFENDER1" pathfile="../imgs/Game/prints/Windows_defender_1.png"></Texture>
-		<Texture id="INWINDOWSDEFENDERVIRUS1" pathfile="../imgs/Game/prints/Windows_defender_VIRUS_1.png"></Texture>
-		<Texture id="INWINDOWSFIREWALL1" pathfile="../imgs/Game/prints/Windows_firewall1.png"></Texture>
-		<Texture id="WINDOWS_DEFENDERLATERAL" pathfile="../imgs/Game/prints/WindowsDefenderAbaLateral_Virus.png"></Texture>
-		<Texture id="WINDOWS_FIREWALL_LATERAL" pathfile="../imgs/Game/prints/WindowsDefenderAbaLateral_Virus.png"></Texture>
-		<Texture id="WINDOWS_BAR" pathfile="../imgs/Game/prints/Windows_Taskbar.png"></Texture>
-		<Texture id="RANSOMWERE_MENU" pathfile="../imgs/Game/prints/Ransomwer.png"></Texture>
-		<Texture id="SEGURANCA_DIPOSITIVO_MENU" pathfile="../imgs/Game/prints/Seguranca_Dispositivo.png"></Texture>
-		<Texture id="PROTECAO_CONTAS_MENU" pathfile="../imgs/Game/prints/Seguranca_Conta.png"></Texture>
+		<Texture id="WORKSPACE1" pathfile="Assets/Game/prints/Area_Trabalho_1.png"></Texture>
+		<Texture id="WORKSPACE2" pathfile="Assets/Game/prints/Area_Trabalho_2.png"></Texture>
+		<Texture id="INFIREFOXY1" pathfile="Assets/Game/prints/Navegador_1.png"></Texture>
+		<Texture id="INFIREFOXY2" pathfile="Assets/Game/prints/Navegador_2.png"></Texture>
+		<Texture id="BLUESCREEN" pathfile="Assets/Game/prints/Tela_Azul.png"></Texture>
+		<Texture id="INSETTINGS1" pathfile="Assets/Game/prints/Settings_1.png"></Texture>
+		<Texture id="INWINDOWSDEFENDER1" pathfile="Assets/Game/prints/Windows_defender_1.png"></Texture>
+		<Texture id="INWINDOWSDEFENDERVIRUS1" pathfile="Assets/Game/prints/Windows_defender_VIRUS_1.png"></Texture>
+		<Texture id="INWINDOWSFIREWALL1" pathfile="Assets/Game/prints/Windows_firewall1.png"></Texture>
+		<Texture id="WINDOWS_DEFENDERLATERAL" pathfile="Assets/Game/prints/WindowsDefenderAbaLateral_Virus.png"></Texture>
+		<Texture id="WINDOWS_FIREWALL_LATERAL" pathfile="Assets/Game/prints/WindowsDefenderAbaLateral_Virus.png"></Texture>
+		<Texture id="WINDOWS_BAR" pathfile="Assets/Game/prints/Windows_Taskbar.png"></Texture>
+		<Texture id="RANSOMWERE_MENU" pathfile="Assets/Game/prints/Ransomwer.png"></Texture>
+		<Texture id="SEGURANCA_DIPOSITIVO_MENU" pathfile="Assets/Game/prints/Seguranca_Dispositivo.png"></Texture>
+		<Texture id="PROTECAO_CONTAS_MENU" pathfile="Assets/Game/prints/Seguranca_Conta.png"></Texture>
 	</Computer>
 </Main>

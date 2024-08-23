@@ -15,8 +15,8 @@ public:
 	// Sla, quis usar o nodiscard aqui
 	[[nodiscard]] bool setFont(const std::string& fontPath, int fontSize);
 
-	void Render(SDL_Renderer* rend, const std::string& message, SDL_Color color, int x, int y, bool square = false, bool tex = false);
-
+	void render(SDL_Renderer* rend, const std::string& message, SDL_Color color, int x, int y, bool square = false, bool tex = false);
+	
 	int getTextWidth(const std::string& text, int fontSize);
 
 	inline void setPathTex(const std::string& newPath) { pathTex = newPath; }

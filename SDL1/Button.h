@@ -10,6 +10,8 @@ class Button {
 public:
 	Button(int x, int y, int width, int height, const std::function<void()>& onClick);
 	
+	~Button();
+
 	inline bool loadTexture(SDL_Renderer* rend, const std::string& pathTex) { 
 		m_Tex = IMG_LoadTexture(rend, pathTex.c_str());
 		if (m_Tex == nullptr) return false;

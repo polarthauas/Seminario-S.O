@@ -17,6 +17,13 @@ public:
 
 	void loadFromFile(SDL_Renderer* rend, const std::string& file) {
 		_tex = IMG_LoadTexture(rend, file.c_str());
+
+		if (_tex == nullptr) {
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Erro ao carregar texture: %s, \n%s", file, IMG_GetError());
+
+			return;
+		}
+
 	}
 
 	void draw(SDL_Renderer* rend, SDL_Rect* srcRect, SDL_Rect* dstRect = nullptr, const double angle = 0,

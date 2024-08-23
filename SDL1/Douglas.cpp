@@ -10,7 +10,7 @@ Douglas::Douglas(SDL_Renderer* rend, std::shared_ptr<TextureMngr> texturemngr )
 {
 	loadTextures();
 
-	douglasRect = { 200, 280, Global::douglasWidth, Global::douglasHeight };
+	douglasRect = Global::resizeRect({ 200, 280, Global::DESIGN_DOUGLAS_WIDTH, Global::DESIGN_DOUGLAS_HEIGHT });
 }
 
 Douglas::~Douglas()
@@ -78,8 +78,8 @@ bool Douglas::moveTo(int8_t dx, int x)
 
 void Douglas::loadTextures()
 {
-	m_TextureMngr->loadTex(DOUGLAS_WALKING, "../imgs/Douglas/Walking.png");
-	m_TextureMngr->loadTex(DOUGLAS_IDLE, "../imgs/Douglas/Idle.png");
+	m_TextureMngr->loadTex(DOUGLAS_WALKING, "Assets/Douglas/Walking.png");
+	m_TextureMngr->loadTex(DOUGLAS_IDLE, "Assets/Douglas/Idle.png");
 }
 
 // A FÍSICA TA UMA MERDAAAAA

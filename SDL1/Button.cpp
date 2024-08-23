@@ -10,6 +10,11 @@ Button::Button(int x, int y, int width, int height, const std::function<void()>&
 	m_OriginRect = m_ButtonRect;
 }
 
+Button::~Button()
+{
+	if (m_Tex) SDL_DestroyTexture(m_Tex);
+}
+
 void Button::Update(const SDL_Event& e)
 {
 	if (!m_Clicable) return;

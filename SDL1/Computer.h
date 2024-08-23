@@ -157,7 +157,7 @@ private:
 	// Funções de evento
 
 	// Verifica se o mouse está dentro da area do pc, se não estiver ele não estará visível
-	void m_MouseInComputer();
+	void MouseInComputer();
 	
 	/*
 	* 
@@ -166,7 +166,7 @@ private:
 	* @param e - SDL_Event, é meio óbvio para que serve isso né
 	* 
 	*/
-	void m_MouseWhell(const SDL_Event& e);
+	void MouseWhell(const SDL_Event& e);
 
 	void m_UpdtDinamicBtsState();
 	

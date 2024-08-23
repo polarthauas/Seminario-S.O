@@ -33,6 +33,7 @@ int main(int argc, char**argv) {
 	// Verifica se inicializou corretamente
 	if (!game.Init("Seminario", Global::DESIGN_WIDTH, Global::DESIGN_HEIGHT)) {
 		return -1;
+	}
 	
 
 	// Looping Principal

@@ -31,7 +31,7 @@ bool MessageManager::setFont(const std::string& fontPath, int fontSize)
 
 }
 
-void MessageManager::Render(SDL_Renderer* rend, const std::string& message, SDL_Color textColor, int x, int y,  bool square, bool tex)
+void MessageManager::render(SDL_Renderer* rend, const std::string& message, SDL_Color textColor, int x, int y,  bool square, bool tex)
 {
     // Dividir o texto em linhas
 

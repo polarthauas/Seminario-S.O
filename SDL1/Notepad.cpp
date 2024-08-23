@@ -33,7 +33,7 @@ void Notepad::updateCursor() {
 	cursorRect.y = notepadRect.y + 25 * (linhaNote+1) + 2;
 }
 
-void Notepad::Render(SDL_Renderer* rend, const SDL_Rect& rCollision) {
+void Notepad::render(SDL_Renderer* rend, const SDL_Rect& rCollision) {
 	
 	// Distância entre as linhas
 	int offy = OFFY;
@@ -44,7 +44,7 @@ void Notepad::Render(SDL_Renderer* rend, const SDL_Rect& rCollision) {
 
 	SDL_SetRenderDrawColor(rend, 255, 0, 0, 255);
 
-	msgManager->Render(rend, "NotePad FODA", { 255, 0, 0 }, notepadRect.x + 5, notepadRect.y + 2);
+	msgManager->render(rend, "NotePad FODA", { 255, 0, 0 }, notepadRect.x + 5, notepadRect.y + 2);
 
 	SDL_RenderDrawLine(rend, rCollision.x, rCollision.y,
 		rCollision.x + rCollision.w, rCollision.y + rCollision.h);
@@ -62,11 +62,11 @@ void Notepad::Render(SDL_Renderer* rend, const SDL_Rect& rCollision) {
 
 	// renderiza o numero das linha
 	for (uint32_t i = 1; i <= maxLinha; i++) {
-		msgManager->Render(rend, std::to_string(i), { 0, 0, 0 }, notepadRect.x + 5, notepadRect.y + offy * i);
+		msgManager->render(rend, std::to_string(i), { 0, 0, 0 }, notepadRect.x + 5, notepadRect.y + offy * i);
 	}
 
 	for (const auto& s : noteText) {
-		msgManager->Render(rend, s, { 0, 0, 0 }, notepadRect.x + 20, notepadRect.y + offy);
+		msgManager->render(rend, s, { 0, 0, 0 }, notepadRect.x + 20, notepadRect.y + offy);
 		offy += OFFY;
 	}
 

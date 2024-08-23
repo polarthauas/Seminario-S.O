@@ -5,16 +5,22 @@
 #include <string>
 #include <memory>
 
-#include "MessageManager.h"
-#include "ButtonMngr.h"
-#include "TextureMngr.h"
 
+class SoundMngr;
+class MessageManager;
+class ButtonMngr;
 class MessageManager;
 class TextureMngr;
 
+namespace Text {
+	class TextAnimMngr;
+}
+
 class Menu {
 public:
-	explicit Menu(SDL_Renderer* renderer, std::shared_ptr<TextureMngr> texturemngr, std::shared_ptr<ButtonMngr>);
+	Menu(SDL_Renderer* renderer, std::shared_ptr<TextureMngr> texturemngr,
+		std::shared_ptr<ButtonMngr> buttonmngr, std::shared_ptr<SoundMngr> soundmngr);
+
 	~Menu();
 
 	void Events(const SDL_Event& e);
@@ -25,18 +31,14 @@ public:
 
 private:
 	SDL_Renderer* m_Renderer;
+
+	Text::TextAnimMngr* textAnimMngr;
 	
 	std::shared_ptr<TextureMngr> m_TextureMngr;
 	std::shared_ptr<ButtonMngr> m_ButtonMngr;
+	std::shared_ptr<SoundMngr> m_SoundMngr;
 
-	SDL_Texture* backgroundTex;
-	SDL_Texture* startButtonTex;
-	SDL_Texture* exitButtonTex;	
-
-	SDL_Rect startButtonRect;
-	SDL_Rect exitButtonRect;
-
-	std::unique_ptr<MessageManager> msgManager;
+	std::shared_ptr<MessageManager> msgManager;
 	
 	bool startClicked;
 	bool exitClicked;

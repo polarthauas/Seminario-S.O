@@ -3,18 +3,25 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
 #include <memory>
+#include <vector>
 
-#include "Menu.h"
-#include "Computer.h"
-#include "Fases.h"
+class Fases;
+class Menu;
+class Douglas;
+class Computer;
+class Mouse;
+
 
 // Managers
+class QuestManager;
+class MessageManager;
+class ButtonMngr;
+class TextureMngr;
+class SoundMngr;
 
-#include "ButtonMngr.h"
-#include "TextureMngr.h"
-#include "MessageManager.h"
-#include "QuestManager.h"
-
+namespace Text {
+	class TextAnimMngr;
+}
 
 #include "mouse.h"
 
@@ -89,13 +96,13 @@ private:
 	std::shared_ptr<QuestManager> m_QuestMngr;
 	std::shared_ptr<TextureMngr> m_TextureMngr;
 	std::shared_ptr<ButtonMngr> m_ButtonMngr;
+	std::shared_ptr<SoundMngr> m_SoundMngr;	
+	std::shared_ptr<Text::TextAnimMngr> m_TextAnimMngr;
 
-	std::unique_ptr<MessageManager> m_MsgManager;
+	std::shared_ptr<MessageManager> m_MsgManager;
 
 	GameState m_GameState{ GameState::INMENU };
 
-	std::vector<Button> m_Buttons;	
-	
 	int auxControlGame{ 0 };
 	
 	bool m_IsRunning{ false };

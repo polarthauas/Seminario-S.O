@@ -18,7 +18,7 @@ public:
 	explicit Notepad(const SDL_Rect& r);
 	~Notepad() = default;
 
-	void Render(SDL_Renderer* rend, const SDL_Rect& rCollision);
+	void render(SDL_Renderer* rend, const SDL_Rect& rCollision);
 	void Events(const SDL_Event& e);
 
 	void SetIsTyping(bool b);

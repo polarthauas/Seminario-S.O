@@ -21,7 +21,7 @@ public:
 	void RenderMoldure(SDL_Renderer* rend);
 	void RenderQuests(SDL_Renderer* rend);
 
-	void AddQuest(QuestType QuestTypem, const std::string& title, const std::string& desc);
+	void AddQuest(QuestType QuestType, const std::string& title, const std::string& desc);
 
 	void Event(const SDL_Event& e);
 
