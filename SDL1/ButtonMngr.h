@@ -27,7 +27,7 @@ public:
 
 	void updateDinamicButtons(PrintTexture& p, int border_sizeX, int border_sizeY);
 
-	[[nodicard]] bool find(const std::string id);
+	bool find(const std::string id);
 
 private:
 	SDL_Renderer* m_Rend;

@@ -31,6 +31,13 @@ enum class GameState {
 	INCOMPUTER
 };
 
+const SDL_Color SDL_WHITE = { 255, 255, 255 };
+const SDL_Color SDL_RED = { 255, 0, 0 };
+const SDL_Color SDL_BLUE = { 0, 0, 255 };
+const SDL_Color SDL_BLACK = { 0, 0, 0 };
+const SDL_Color SDL_GREEN = { 0, 255, 0 };
+const SDL_Color SDL_PURPLE = { 255, 0, 255 };
+
 class Game {
 public:
 	Game();
@@ -96,8 +103,6 @@ private:
 	std::shared_ptr<QuestManager> m_QuestMngr;
 	std::shared_ptr<TextureMngr> m_TextureMngr;
 	std::shared_ptr<ButtonMngr> m_ButtonMngr;
-	std::shared_ptr<SoundMngr> m_SoundMngr;	
-	std::shared_ptr<Text::TextAnimMngr> m_TextAnimMngr;
 
 	std::shared_ptr<MessageManager> m_MsgManager;
 

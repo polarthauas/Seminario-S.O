@@ -3,6 +3,7 @@
 #include "Notepad.h"
 #include "TextureMngr.h"
 #include "ButtonMngr.h"
+#include "MessageManager.h"
 
 #include "Computer_DEFINES.h"
 

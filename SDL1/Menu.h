@@ -19,7 +19,7 @@ namespace Text {
 class Menu {
 public:
 	Menu(SDL_Renderer* renderer, std::shared_ptr<TextureMngr> texturemngr,
-		std::shared_ptr<ButtonMngr> buttonmngr, std::shared_ptr<SoundMngr> soundmngr);
+		std::shared_ptr<ButtonMngr> buttonmngr);
 
 	~Menu();
 
@@ -36,7 +36,6 @@ private:
 	
 	std::shared_ptr<TextureMngr> m_TextureMngr;
 	std::shared_ptr<ButtonMngr> m_ButtonMngr;
-	std::shared_ptr<SoundMngr> m_SoundMngr;
 
 	std::shared_ptr<MessageManager> msgManager;
 	

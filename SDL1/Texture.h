@@ -19,7 +19,7 @@ public:
 		_tex = IMG_LoadTexture(rend, file.c_str());
 
 		if (_tex == nullptr) {
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Erro ao carregar texture: %s, \n%s", file, IMG_GetError());
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Erro ao carregar texture: %s, \n%s", file.c_str(), IMG_GetError());
 
 			return;
 		}

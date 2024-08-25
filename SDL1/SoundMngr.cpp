@@ -5,21 +5,9 @@
 
 #include <thread>
 
-SoundMngr::SoundMngr()
+void playSound(const std::string& path)
 {
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1){
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Erro ao iniciar o Mixer");
-	}
-}
-
-SoundMngr::~SoundMngr()
-{
-	Mix_CloseAudio();
-}
-
-void SoundMngr::playSound(const std::string& path)
-{
-    std::thread([this, path]() {
+    std::thread([path]() {
         auto sound = Mix_LoadWAV(path.c_str());
         if (!sound) {
             SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Erro ao carregar o som: %s", Mix_GetError());
@@ -43,3 +31,4 @@ void SoundMngr::playSound(const std::string& path)
 
         }).detach();
 }
+

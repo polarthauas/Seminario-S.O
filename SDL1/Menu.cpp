@@ -7,8 +7,8 @@
 #include "TextureMngr.h"
 #include "SoundMngr.h"
 
-Menu::Menu(SDL_Renderer* rend, std::shared_ptr<TextureMngr> texturemngr, std::shared_ptr<ButtonMngr> buttonmngr, std::shared_ptr<SoundMngr> soundmngr)
-	: m_Renderer(rend), m_TextureMngr(texturemngr), m_ButtonMngr(buttonmngr), m_SoundMngr(soundmngr)
+Menu::Menu(SDL_Renderer* rend, std::shared_ptr<TextureMngr> texturemngr, std::shared_ptr<ButtonMngr> buttonmngr)
+	: m_Renderer(rend), m_TextureMngr(texturemngr), m_ButtonMngr(buttonmngr)
 {
 	msgManager = std::make_shared<MessageManager>();
 

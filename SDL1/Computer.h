@@ -13,7 +13,6 @@
 
 #pragma once
 
-#include "MessageManager.h"
 #include "Globals.h"
 #include "Notepad.h"
 
@@ -27,6 +26,7 @@
 class TextureMngr;
 class Button;
 class ButtonMngr;
+class MessageManager;
 
 // Esses negócio grande ai
 using FilePrintMap = std::unordered_map<std::string, std::string>;

@@ -87,6 +87,9 @@
     <ClCompile Include="SoundMngr.cpp">
       <Filter>Arquivos de Origem\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="Computer_DEFINES.h">
       <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Arquivos de Cabeçalho\Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

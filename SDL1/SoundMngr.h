@@ -1,12 +1,5 @@
 #pragma once
 
-#include <string>]
+#include <string>
 
-class SoundMngr {
-public:
-	SoundMngr();
-
-	~SoundMngr();
-
-	void playSound(const std::string&);
-};
+void playSound(const std::string& path);

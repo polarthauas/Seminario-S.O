@@ -14,8 +14,14 @@
 #include "TextAnimMngr.h"
 #include "TextureMngr.h"
 
+#include "TextAnimLetterByLetter.h"
+
+
 #include <iostream>
 #include <cstdlib>	
+
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
 Game::Game(){}
 
@@ -30,6 +36,10 @@ bool Game::Init(const char* title, int width, int height) {
 		return false;
 	}
 	if (!(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG))) {
+		return false;
+	}
+	
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
 		return false;
 	}
 
@@ -68,15 +78,13 @@ bool Game::Init(const char* title, int width, int height) {
 	
 	m_TextureMngr = std::make_shared<TextureMngr>(m_Renderer);
 	m_ButtonMngr = std::make_shared<ButtonMngr>(m_Renderer, m_TextureMngr);
-	m_SoundMngr = std::make_shared<SoundMngr>();
-	m_TextAnimMngr = std::make_shared<Text::TextAnimMngr>();
 
 	if (!m_MsgManager->setFont("../fonts/Roboto-Regular.ttf", 30)) {
 		SDL_Log("Erro ao carregar a fonte");
 		return false;
 	}
 
-	m_Menu = std::make_unique<Menu>(m_Renderer, m_TextureMngr, m_ButtonMngr, m_SoundMngr);
+	m_Menu = std::make_unique<Menu>(m_Renderer, m_TextureMngr, m_ButtonMngr);
 
 	return m_IsRunning = true;
 }
@@ -96,12 +104,8 @@ void Game::cleanUp() {
 	m_Computer.reset();
 	m_Fases.reset();
 
-	m_TextAnimMngr.reset();
-
 	m_ButtonMngr.reset();
-	
 	m_MsgManager.reset();
-	m_SoundMngr.reset();
 	m_TextureMngr.reset();
 
 	if (m_Renderer) SDL_DestroyRenderer(m_Renderer);
@@ -115,6 +119,8 @@ void Game::Event() {
 			m_IsRunning = false;
 		}
 
+		m_MsgManager->processInput(e);
+
 		if (m_GameState == GameState::INMENU) {
 			m_Menu->Events(e);
 			if (m_Menu->isStartClicked()) {
@@ -126,13 +132,30 @@ void Game::Event() {
 
 				m_QuestMngr = std::make_shared<QuestManager>();
 				
-				m_TextAnimMngr->addTextAnimation("message1", { "Ola, eu sou o Douglas\n(Ignore minha calvície, já vou fazer implante capilar)", {0, 0, 0}, 150, 500}, true, true);
-
 				auto button = std::make_unique<Button>(595, 256, 85, 128, [this]() {
 					m_TentouSair = true;
 					});
 
 				m_ButtonMngr->addButton("doorButton", std::move(button));
+
+				auto message1 = std::make_unique<Text::LetterByLetter>("Ola, eu sou o Douglas\n(Ignore minha calvície, já vou fazer implante capilar)", SDL_BLACK, 150, 500, true);
+
+				auto message2 = std::make_unique<Text::LetterByLetter>( "Vim ajudar na apresentação sobre...", SDL_BLACK, 150, 500, true);
+
+				auto message3 = std::make_unique<Text::LetterByLetter>("Configurações de Segurança e Privacidade no Windows", SDL_PURPLE, 150, 50, true);
+
+				auto message4 = std::make_unique<Text::LetterByLetter>("Vamos começar com a introdução sobre segurança\nPara isso vamos rodar o comando start ms - settings:windowsdefender", SDL_RED, 100, 500, true);
+
+				auto message5 = std::make_unique<Text::LetterByLetter>("Agora que foi dada a introdução do tema, vamos nos aprofundar mais...", SDL_BLACK, 100, 500, true);
+
+				auto message6 = std::make_unique<Text::LetterByLetter>("Nova missão adicionadas! Pressione M para vê-la", SDL_GREEN, 100, 560, true);
+
+				m_MsgManager->addMessage(std::move(message1));
+				m_MsgManager->addMessage(std::move(message2));
+				m_MsgManager->addMessage(std::move(message3));
+				m_MsgManager->addMessage(std::move(message4));
+				m_MsgManager->addMessage(std::move(message5));
+				m_MsgManager->addMessage(std::move(message6));
 			}
 			else if (m_Menu->isExitClicked()) {
 				m_IsRunning = false;
@@ -149,7 +172,7 @@ void Game::Event() {
 
 					auxControlGame = 0;
 
-					m_Menu = std::make_unique<Menu>(m_Renderer, m_TextureMngr, m_ButtonMngr, m_SoundMngr);	
+					m_Menu = std::make_unique<Menu>(m_Renderer, m_TextureMngr, m_ButtonMngr);	
 
 					setGameState(GameState::INMENU);
 					break;
@@ -206,7 +229,7 @@ void Game::Render() {
 
 		controlGameMsgs(0);
 
-		if (m_TentouSair) m_MsgManager->render(m_Renderer, "Tem nada pra fazer la fora não fi", { 255, 25, 56 }, 200, 300, true, true);
+		if (m_TentouSair) m_MsgManager->render(m_Renderer, "Tem nada pra fazer la fora não fi", { 255, 25, 56 }, 200, 300);
 
 	}	
 	else if (m_GameState == GameState::INCOMPUTER) {
@@ -216,7 +239,8 @@ void Game::Render() {
 	}
 
 	m_ButtonMngr->renderAll();
-	m_TextAnimMngr->renderAll(m_Renderer, m_MsgManager);
+	m_MsgManager->renderAll(m_Renderer);
+
 	if (m_QuestMenu) m_QuestMngr->Render(m_Renderer);
 
 	SDL_RenderPresent(m_Renderer);
@@ -226,7 +250,7 @@ void Game::Update()
 {
 	frameStart = SDL_GetTicks();
 
-	m_TextAnimMngr->updateAll(m_SoundMngr);
+	m_MsgManager->updateAll();
 
 	if (m_GameState == GameState::INGAME) {
 		m_Douglas->Update();
@@ -251,8 +275,6 @@ void Game::controlGameMsgs(int cmd)
 		else if (cmd == 1) {
 			auxControlGame++;
 			m_MsgManager->setFontSize(30);
-			m_TextAnimMngr->clean();
-			m_TextAnimMngr->addTextAnimation("message2", { "Vim ajudar na apresentação sobre...", {0, 0, 0}, 150, 500 }, true, true);
 		}
  		
 		break;
@@ -262,19 +284,14 @@ void Game::controlGameMsgs(int cmd)
 		}
 		else if (cmd == 1) {
 			auxControlGame++;
-			m_TextAnimMngr->clean();
-			m_TextAnimMngr->addTextAnimation("message3", { "Configurações de Segurança e Privacidade no Windows", { 255, 0, 255 }, 150, 50 }, true, true);
 		}
 		break;
 	case 2:
 		if (cmd == 0) {
-			m_MsgManager->render(m_Renderer, "Configurações de Segurança e Privacidade no Windows", { 255, 0, 255 }, 150, 50);
 		}
 		else if (cmd == 1) {
 			m_Douglas->jump();
 			auxControlGame++;
-			m_TextAnimMngr->clean();
-			m_TextAnimMngr->addTextAnimation("message4", { "Vamos começar com a introdução sobre segurança\nPara isso vamos rodar o comando start ms-settings:windowsdefender", {205, 0, 0}, 100, 500 }, true, true);
 		}
 		break;
 	
@@ -286,32 +303,18 @@ void Game::controlGameMsgs(int cmd)
 			m_QuestMngr->AddQuest(QuestType::Main, "Entre no pc", "Clique no pc que ele abre");
 			auto button = std::make_unique<Button>(85, 256, 85, 64, [this]() {
 				auxControlGame++;
+				m_MsgManager->popQueue();
 				m_QuestMngr->DropQuest("Entre no pc");
 			});
 
 			m_ButtonMngr->addButton("computerEnter", std::move(button));
-
-			m_TextAnimMngr->clean();
-			m_TextAnimMngr->addTextAnimation("message5", { "Agora que foi dada a introdução do tema, vamos nos aprofundar mais...", {20, 10, 56}, 100, 500 }, true, true);
-			m_TextAnimMngr->addTextAnimation("message6", { "Nova missão adicionada! Pressione M para acessar o menu de missões", {255, 0, 0}, 100, 570 }, true, false);
 		}
 		break;
 
 	case 4:
-		if (cmd == 0) {
-			/*m_MsgManager->render(
-				m_Renderer, 
-				"",
-				{ 0, 10, 56 },
-				100, 500, true, true
-			);
-			m_MsgManager->render(m_Renderer, "Nova missão adicionada! Pressione M para acessar o menu de missões", { 255, 0, 0 },
-				100, 550, true, false);*/
-
-		} else if (cmd == 1) {
+		if (cmd == 1) {
 			m_Douglas->setCanControl(true);
 			auxControlGame++;
-			m_TextAnimMngr->clean();
 		}
 		break;
 	case 6:
@@ -327,16 +330,20 @@ void Game::controlGameMsgs(int cmd)
 
 			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
+			auto message1 =  std::make_unique<Text::LetterByLetter>("Aiai, novamente estou no pc, vamos navegar na internet", SDL_BLACK, 160, 160, true);
+			
+			m_MsgManager->addMessage(std::move(message1));
+
 			auxControlGame++;
 		}
 		break;
 	case 7:
-		if (cmd == 0) {
-			m_MsgManager->render(m_Renderer, "Aiai, novamente estou no pc, vamos navegar na internet", {0, 0, 0}, 160, 100,
-				true, true);
-		}
-		else if (cmd == 1) {
+		if (cmd == 1) {
 			auxControlGame++;;
+
+			auto message1 = std::make_unique<Text::LetterByLetter>("Vou pesquisar sobre o tratamento da calvice...", SDL_BLACK, 250, 100, true);
+
+			m_MsgManager->addMessage(std::move(message1));
 		}
 		break;
 	case 8:
@@ -345,58 +352,60 @@ void Game::controlGameMsgs(int cmd)
 				mouse->moveMouseSmoothly(700, 730, 1700);
 
 			m_Computer->setState("INFIREFOXY1");
-			
-			m_MsgManager->render(m_Renderer, "Vou pesquisar sobre o tratamento da calvice...", {0, 0, 0}, 250, 100,
-				true, true);
 		}
 		else if (cmd == 1) {
 			m_Computer->setState("INFIREFOXY2");
 			auxControlGame++;
+
+			auto message1 = std::make_unique<Text::LetterByLetter>("Agora basta dar enter para eu ter acesso ao tratamento SUPREMO contra a calvice", SDL_RED, 200, 100, true);
+			
+			m_MsgManager->addMessage(std::move(message1));
+
 		}
 		break;
 	case 9:
-		if (cmd == 0) {
-			m_MsgManager->render(m_Renderer, "Agora basta dar enter para eu ter acesso ao tratamento SUPREMO contra a calvice", { 230, 50, 0 }, 250, 100,
-				true, true);
-		}
-		else if (cmd == 1) {
+		if (cmd == 1) {
 			m_Computer->setState("BLUESCREEN");
 			auxControlGame++;
+
+			auto message1 = std::make_unique<Text::LetterByLetter>("Oh não, sabia que eu não deveria ter clicado no baner\n Mães solteiras que curam calvicie a 5km de você e desligado o windows defender", SDL_PURPLE, 100, 50, true);
+
+			m_MsgManager->addMessage(std::move(message1));
 		}
 
 		break;
 	case 10:
 		if (cmd == 0) {
-			m_MsgManager->render(m_Renderer, "Oh não, sabia que eu não deveria ter clicado no baner\n Mães solteiras que curam calvicie a 5km de você e desligado o windows defender",
-				{ 255, 0, 255 }, 100, 50, true, true);
 		} if (cmd == 1) {
 			auxControlGame++;
+
+			auto message1 = std::make_unique<Text::LetterByLetter>("Agora vou formatar o Windows, ja volto...", SDL_BLACK, 250, 50, true);
+
+			m_MsgManager->addMessage(std::move(message1));
 		}
 		break;
 	case 11:
 		if (cmd == 0) {
-			m_MsgManager->render(m_Renderer, "Agora vou formatar o windows, ja volto...", {25, 50, 50},
-				250, 50, true, true);
 		}
 		else if (cmd == 1) {
 			m_Computer->setState("WORKSPACE2");
 			auxControlGame++;
 			m_MsgManager->setFontSize(25);
-			//m_QuestMngr->AddQuest(QuestType::Main, "Entre nas configurações!", "Clique no icone de configurações para acessar o menu");
-			//m_QuestMngr->AddQuest(QuestType::Secondary, "Explore os arquivos do Douglas", "Sai clicando em tudo ai");
+			m_QuestMngr->AddQuest(QuestType::Main, "Entre nas configuracões!", "Clique no icone de configurações para acessar o menu");
+			m_QuestMngr->AddQuest(QuestType::Secondary, "Explore o PC", "Sai clicando em tudo ai");
+
+			auto message1 = std::make_unique<Text::LetterByLetter>("Agora que EU formatei o Windows EU preciso de sua\najuda para configurar corretamente o WINDOWS DEFENDER e a manter minha privacidade,\nagora VOCÊ tem permissão para CONTROLAR o MEU pc\nMúltiplas missões adicionadas!", SDL_BLUE, 250, 500, true);
+
+			m_MsgManager->addMessage(std::move(message1));
 		}
 		break;
 	case 12:
-		if (cmd == 0) {
-			m_MsgManager->render(m_Renderer,
-				"Agora que EU formatei o Windows EU preciso de sua\najuda para configurar corretamente o WINDOWS DEFENDER e a manter minha privacidade,\nagora VOCÊ tem permissão para CONTROLAR o MEU pc\nMúltiplas missões adicionadas!",
-				{255, 0 , 0}, 250, 500, true, true);
+		if (cmd == 0) {}
+		
+		else if (cmd == 1) {
+			auxControlGame++;
+			m_MsgManager->popQueue();
 		}
-		else if (cmd == 1) auxControlGame++;
-
-	case 13:
-
-		break;
 	default:
 		break;
 	}
