@@ -154,6 +154,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="ButtonMngr.h" />
     <ClInclude Include="Computer.h" />
+    <ClInclude Include="Computer_DEFINES.h" />
     <ClInclude Include="Douglas.h" />
     <ClInclude Include="Fases.h" />
     <ClInclude Include="Globals.h" />

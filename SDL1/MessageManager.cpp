@@ -6,7 +6,6 @@
 #include <vector>
 
 MessageManager::MessageManager()
-	: font(nullptr)
 {
 }
 
@@ -15,6 +14,11 @@ MessageManager::~MessageManager()
     if (font != nullptr) {
         TTF_CloseFont(font);
         font = nullptr;
+    }
+
+    if (_tex != nullptr) {
+        SDL_DestroyTexture(_tex);
+        _tex = nullptr;
     }
 }
 
@@ -26,8 +30,7 @@ bool MessageManager::setFont(const std::string& fontPath, int fontSize)
 
 	font = TTF_OpenFont(fontPath.c_str(), fontSize);
     
-    if (!font) return false;
-    return true;
+    return font != nullptr;
 
 }
 
@@ -52,12 +55,13 @@ void MessageManager::render(SDL_Renderer* rend, const std::string& message, SDL_
         // Renderizar o fundo para o teXto
         int maxWidth = 0;
         for (const auto& l : lines) {
-            SDL_Surface* tmp_Surface = TTF_RenderText_Blended(font, l.c_str(), textColor);
+            auto tmp_Surface = TTF_RenderText_Blended(font, l.c_str(), textColor);
             if (tmp_Surface) {
                 maxWidth = std::max(maxWidth, tmp_Surface->w);
                 SDL_FreeSurface(tmp_Surface);
             }
         }
+
         SDL_SetRenderDrawColor(rend, 255, 255, 255, 255); // Branco
         SDL_Rect backgroundRect = { X - 20, Y - 20, maxWidth + 40, lineHeight * lines.size() + 30 };
         SDL_RenderFillRect(rend, &backgroundRect);
@@ -65,19 +69,14 @@ void MessageManager::render(SDL_Renderer* rend, const std::string& message, SDL_
 
     // Renderizar cada linha
     for (const auto& l : lines) {
-        SDL_Surface* tmp_Surface = TTF_RenderText_Blended(font, l.c_str(), textColor);
+        auto tmp_Surface = TTF_RenderText_Blended(font, l.c_str(), textColor);
         if (!tmp_Surface) continue;
 
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(rend, tmp_Surface);
-        if (!texture) {
-            SDL_FreeSurface(tmp_Surface);
-            continue;
-        }
-
+        auto texture = SDL_CreateTextureFromSurface(rend, tmp_Surface);
+       
         SDL_Rect destRect = { X, currentY, tmp_Surface->w, tmp_Surface->h };
         SDL_RenderCopy(rend, texture, nullptr, &destRect);
 
-        // Limpa recursos
         SDL_FreeSurface(tmp_Surface);
         SDL_DestroyTexture(texture);
 
@@ -85,7 +84,6 @@ void MessageManager::render(SDL_Renderer* rend, const std::string& message, SDL_
     }
 
     if (tex) {
-        auto _tex = IMG_LoadTexture(rend, pathTex.c_str());
         auto w = Global::douglasWidth;
         auto h = Global::douglasHeight;
 
@@ -93,8 +91,6 @@ void MessageManager::render(SDL_Renderer* rend, const std::string& message, SDL_
         if (SDL_RenderCopy(rend, _tex, nullptr, &auxRect) < 0) {
             SDL_Log(SDL_GetError());
         }
-
-        SDL_DestroyTexture(_tex);
     }
 }
 
@@ -113,3 +109,12 @@ int MessageManager::getTextWidth(const std::string & text, int fontSize) {
 
     return textWidth;
 }
+
+void MessageManager::setImageTexture(SDL_Renderer* rend, const std::string& newPath)
+{
+    _tex = IMG_LoadTexture(rend, newPath.c_str());
+    if (_tex == nullptr) {
+        SDL_Log("Erro: %s", IMG_GetError());
+    }
+}
+

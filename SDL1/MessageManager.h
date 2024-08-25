@@ -12,18 +12,17 @@ public:
 	MessageManager();
 	~MessageManager();
 	
-	// Sla, quis usar o nodiscard aqui
-	[[nodiscard]] bool setFont(const std::string& fontPath, int fontSize);
+	bool setFont(const std::string& fontPath, int fontSize);
 
 	void render(SDL_Renderer* rend, const std::string& message, SDL_Color color, int x, int y, bool square = false, bool tex = false);
 	
 	int getTextWidth(const std::string& text, int fontSize);
 
-	inline void setPathTex(const std::string& newPath) { pathTex = newPath; }
+	void setImageTexture(SDL_Renderer* rend, const std::string& newPath);
 
 	void setFontSize(uint16_t size);
 
 private:
-	TTF_Font* font;
-	std::string pathTex;
+	SDL_Texture* _tex{ nullptr };
+	TTF_Font* font{ nullptr };
 };

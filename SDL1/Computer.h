@@ -14,29 +14,28 @@
 #pragma once
 
 #include "MessageManager.h"
+#include "Globals.h"
+#include "Notepad.h"
 
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
 #include <string>
 #include <unordered_map>
 #include <vector>
-
 #include <memory>
 
-#include "Notepad.h"
-#include "Button.h"
-
 class TextureMngr;
+class Button;
 class ButtonMngr;
 
 // Esses negócio grande ai
 using FilePrintMap = std::unordered_map<std::string, std::string>;
 
 // Velocidade da rolagem das guias
-const uint8_t SCROLL_SPEED = 15;
+static const uint8_t SCROLL_SPEED = 15;
 
 static const int BORDER_SIZE = 20;
-static const int WINDOWSBAR_SIZE = 42;
+static const int WINDOWSBAR_SIZE = 43;
 
 // Facilita o gerenciamento das Print
 struct PrintTexture {
@@ -125,6 +124,8 @@ private:
 	std::shared_ptr<TextureMngr> m_TextureMngr;
 	std::shared_ptr<ButtonMngr> m_ButtonMngr;
 
+	std::unordered_map<std::string, bool> m_LocaisJaVisitados;
+
 	void ParseXML();
 
 	// Renderizadores
@@ -139,8 +140,11 @@ private:
 
 	void m_LoadButtons();
 	void m_LoadTexture();
+
+	void _LoadDefenderLateral();
 	
 	void _LoadExitBtn();
+	void _LoadDefenderLateralBtns();
 
 	inline void _LoadWindowsBar() {
 		// Cria a barra do windows

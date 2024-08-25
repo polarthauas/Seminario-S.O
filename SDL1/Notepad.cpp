@@ -1,4 +1,4 @@
-#include "globals.h"
+#include "Globals.h"
 #include "MessageManager.h"
 #include "Notepad.h"
 
@@ -25,7 +25,9 @@ Notepad::Notepad(const SDL_Rect& r)
 	noteText.emplace_back("Construir a décima 8º mansão nos EUA");
 
 	msgManager = std::make_unique<MessageManager>();
-	msgManager->setFont("../fonts/Roboto-Regular.ttf", 11);
+	if(!msgManager->setFont("../fonts/Roboto-Regular.ttf", 11)){
+		SDL_Log("Erro ao carregar fonte");
+	}
 }
 
 void Notepad::updateCursor() {
@@ -90,10 +92,7 @@ void Notepad::Events(const SDL_Event& e) {
 
 		SDL_GetMouseState(&x, &y);
 
-		if (x >= notepadRect.x && y >= notepadRect.y &&
-			x <= notepadRect.x + notepadRect.w &&
-			y <= notepadRect.y + notepadRect.h) {
-
+		if (Global::mouseInRect(x, y, notepadRect)) {
 			isDraggingNotePad = true;
 			dragStartX = x;
 			dragStartY = y;

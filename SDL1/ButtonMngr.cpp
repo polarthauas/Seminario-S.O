@@ -5,7 +5,7 @@
 void ButtonMngr::addButton(const std::string& id, std::unique_ptr<Button> button)
 {
 	if (m_Buttons.find(id) != m_Buttons.end()) {
-		SDL_Log("Esse id já existe");
+		SDL_Log("Id: %s já existe", id.c_str());
 		return;
 	}
 
@@ -15,7 +15,7 @@ void ButtonMngr::addButton(const std::string& id, std::unique_ptr<Button> button
 void ButtonMngr::dropButton(const std::string& id)
 {
 	if (m_Buttons.find(id) == m_Buttons.end()) {
-		SDL_Log("Este Id não existe");
+		SDL_Log("ID: %s não existe", id.c_str());
 		return;
 	}
 
@@ -44,7 +44,7 @@ void ButtonMngr::updateAll(const SDL_Event& e)
 void ButtonMngr::updatePosition(const std::string& id, int x, int y)
 {
 	if (m_Buttons.find(id) == m_Buttons.end()) {
-		SDL_Log("Id: %s não encontrado", id);
+		SDL_Log("Id: %s não encontrado", id.c_str());
 		return;
 	}
 
@@ -54,10 +54,14 @@ void ButtonMngr::updatePosition(const std::string& id, int x, int y)
 void ButtonMngr::updateDinamicButtons(PrintTexture& p, int border_sizeX, int border_sizeY)
 {
 	for (auto& b : m_Buttons) {
-		if (p.srcRect.y - 5 <= b.second->GetRect().y + border_sizeX && b.second->GetRect().y + border_sizeY <= p.srcRect.y + p.srcRect.h) {
+		if (b.first.substr(0, 7) == "Lateral") continue;
+
+		auto btnY = b.second->GetOriginRect().y - p.srcRect.y;
+
+		if (btnY <= p.dstRect.y + p.dstRect.h && btnY >= p.dstRect.y) {
 			b.second->SetClicable(true);
 			b.second->SetVisible(true);
-			b.second->setPosition(b.second->GetOriginRect().x, b.second->GetOriginRect().y - p.srcRect.y);
+			b.second->setPosition(b.second->GetOriginRect().x, btnY);
 		}
 		else {
 			b.second->SetVisible(false);

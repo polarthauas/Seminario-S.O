@@ -22,7 +22,8 @@ void Text::LetterByLetter::update(std::shared_ptr<SoundMngr> soundMngr)
 
         if (m_CurrentIndex < b_Text.size()) {
             ++m_CurrentIndex;
-            soundMngr->playSound("Audio/DialogTextSoundEffects/Retro_03/Retro_Single_v3_wav.wav");
+            if(m_CurrentIndex % 2 == 0)
+                soundMngr->playSound("Audio/DialogTextSoundEffects/Retro_01/Retro_Single_v2_wav.wav");
         }
         else {
             run = false;

@@ -146,6 +146,9 @@
     <ClInclude Include="SoundMngr.h">
       <Filter>Arquivos de Cabeçalho\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Computer_DEFINES.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Textures.xml" />

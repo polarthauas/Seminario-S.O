@@ -24,7 +24,7 @@ void Button::Update(const SDL_Event& e)
 
 	SDL_GetMouseState(&mouseX, &mouseY);
 
-	const bool isInside = Global::clickedRect(mouseX, mouseY, m_ButtonRect);
+	const bool isInside = Global::mouseInRect(mouseX, mouseY, m_ButtonRect);
 
 	if (!isInside) {
 		m_IsClicked = false;

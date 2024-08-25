@@ -24,9 +24,10 @@ int Global::resizeValue(int v, Global::RESIZE_MODE mode)
 	}
 }
 
-bool Global::clickedRect(int x, int y, SDL_Rect b) {
-	return (x >= b.x && x <= b.x + b.w &&
-		y >= b.y && y <= b.y + b.h);
+bool Global::mouseInRect(int x, int y, SDL_Rect& b) {
+	SDL_Point p = { x, y };
+
+	return SDL_PointInRect(&p, &b);
 }
 
 SDL_Rect Global::resizeRect(SDL_Rect a)

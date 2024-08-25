@@ -23,7 +23,7 @@ namespace Global{
 
 	int resizeValue(int a, RESIZE_MODE mode);
 
-	bool clickedRect(int x, int y, SDL_Rect b);
+	bool mouseInRect(int x, int y, SDL_Rect& b);
 
 	SDL_Rect resizeRect(SDL_Rect a);
 }

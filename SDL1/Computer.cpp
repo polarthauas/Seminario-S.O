@@ -4,12 +4,14 @@
 #include "TextureMngr.h"
 #include "ButtonMngr.h"
 
+#include "Computer_DEFINES.h"
+
 #include <vector>
 #include <memory>
 #include <tinyxml2.h>
 
 Computer::Computer(SDL_Renderer* rend, std::shared_ptr<TextureMngr> texturemngr, std::shared_ptr<ButtonMngr> buttonmngr)
-	: m_ComputerState("WORKSPACE1"), m_Rend(rend), m_TextureMngr(texturemngr), m_ButtonMngr(buttonmngr)
+	: m_ComputerState(WORKSPACE1), m_Rend(rend), m_TextureMngr(texturemngr), m_ButtonMngr(buttonmngr)
 {
 	printRect = { Global::resizeValue(20, Global::RESIZE_MODE_WIDTH), Global::resizeValue(20, Global::RESIZE_MODE_HEIGHT), 
 		Global::windowWidth - Global::resizeValue(40, Global::RESIZE_MODE_WIDTH),
@@ -35,79 +37,119 @@ void Computer::m_LoadTexture() {
 
 	// Alerta: MUITOS IF ELSE
 
-	if (m_ComputerState == "WORKSPACE1") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WORKSPACE1"].c_str()), printRect);
+	if (m_ComputerState == WORKSPACE1) {
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[WORKSPACE1].c_str()), printRect);
 	}
-	else if (m_ComputerState == "INFIREFOXY1") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INFIREFOXY1"].c_str()), printRect);
+	else if (m_ComputerState == INFIREFOX1) {
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[INFIREFOX1].c_str()), printRect);
 	}
-	else if (m_ComputerState == "INFIREFOXY2") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INFIREFOXY2"].c_str()), printRect);
+	else if (m_ComputerState == INFIREFOX2) {
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[INFIREFOX2].c_str()), printRect);
 	}
-	else if (m_ComputerState == "BLUESCREEN") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["BLUESCREEN"].c_str()), printRect);
+	else if (m_ComputerState == INBLUESCREEN) {
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[INBLUESCREEN].c_str()), printRect);
 	}
-	else if (m_ComputerState == "WORKSPACE2") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WORKSPACE2"].c_str()), printRect);
+	else if (m_ComputerState == WORKSPACE2) {
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[WORKSPACE2].c_str()), printRect);
 	}
-	else if (m_ComputerState == "INSETTINGS1") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INSETTINGS1"].c_str()), printRect);
+	else if (m_ComputerState == SETTINGS1) {
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[SETTINGS1].c_str()), printRect);
 	}
-	else if (m_ComputerState == "INWINDOWSDEFENDER1") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INWINDOWSDEFENDER1"].c_str()), printRect);
-	}
-	else if (m_ComputerState == "INWINDOWSDEFENDERVIRUS1") {
+	else if (m_ComputerState == WINDOWSDEFENDER1) {
 		_LoadWindowsBar();
-
-		SDL_Rect rectLateral = Global::resizeRect({ BORDER_SIZE, BORDER_SIZE, 320, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
-
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_DEFENDERLATERAL"].c_str()), rectLateral);
+		_LoadDefenderLateral();
 		
-		SDL_Rect rectPrint = Global::resizeRect({BORDER_SIZE+320, BORDER_SIZE, Global::DESIGN_WIDTH - 360, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
+		SDL_Rect rectPrint = Global::resizeRect({BORDER_SIZE+310, BORDER_SIZE, Global::DESIGN_WIDTH - 350, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
+
+		SDL_Rect srcPrint = { 0, 0, 1080, 728 };
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[WINDOWSDEFENDER1].c_str()), rectPrint, srcPrint, true, 845);
+
+
+	}
+	else if (m_ComputerState == WINDOWSDEFENDERVIRUS1) {
+		_LoadWindowsBar();
+		_LoadDefenderLateral();
+
+		SDL_Rect rectPrint = Global::resizeRect({BORDER_SIZE+310, BORDER_SIZE, Global::DESIGN_WIDTH - 350, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
 
 		SDL_Rect srcPrint = { 0, 0, 1040, 728 };
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INWINDOWSDEFENDERVIRUS1"].c_str()), rectPrint, srcPrint, true, 1038);
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[WINDOWSDEFENDERVIRUS1].c_str()), rectPrint, srcPrint, true, 1038);
 	}
-	else if (m_ComputerState == "INWINDOWSFIREWALL1") {
+	else if (m_ComputerState == WINDOWSFIREWALL1) {
 		_LoadWindowsBar();
+		_LoadDefenderLateral();
 
-		SDL_Rect rectLateral = Global::resizeRect({ BORDER_SIZE, BORDER_SIZE, 320, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_FIREWALL_LATERAL"].c_str()), rectLateral);
-
-		SDL_Rect rectPrint = Global::resizeRect({BORDER_SIZE+320, BORDER_SIZE, Global::DESIGN_WIDTH - 360, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
+		SDL_Rect rectPrint = Global::resizeRect({BORDER_SIZE+310, BORDER_SIZE, Global::DESIGN_WIDTH - 350, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE});
 		SDL_Rect srcPrint = { 0, 0, 1080, 728 };
 		
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["INWINDOWSFIREWALL1"].c_str()), rectPrint, srcPrint, true, 1080);
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[WINDOWSFIREWALL1].c_str()), rectPrint, srcPrint, true, 1080);
 
 	}
-	else if (m_ComputerState == "RANSOMWERE_MENU") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["RANSOMWERE_MENU"].c_str()), printRect);
+	else if (m_ComputerState == RANSOMWERE_MENU) {
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[RANSOMWERE_MENU].c_str()), printRect);
 	}
-	else if (m_ComputerState == "SEGURANCA_DISPOSITIVO_MENU") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["SEGURANCA_DISPOSITIVO_MENU"].c_str()), printRect);
+	else if (m_ComputerState == SEGURANCA_DISPOSITIVO_MENU) {
+		auto tex = IMG_LoadTexture(m_Rend, "Assets/Game/prints/Seguranca_Dispositivo.png");
+		if (tex == nullptr) {
+			SDL_Log("%s", IMG_GetError());
+		}
+		m_Textures.emplace_back(tex, printRect);
 	}
-	else if (m_ComputerState == "PROTECAO_CONTAS_MENU") {
-		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["PROTECAO_CONTAS_MENU"].c_str()), printRect);
+	else if (m_ComputerState == PROTECAO_CONTAS_MENU) {
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[PROTECAO_CONTAS_MENU].c_str()), printRect);
+	}
+	else if (m_ComputerState == OPCOES_FAMILIA_MENU) {
+		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[m_ComputerState].c_str()), printRect);
 	}
 	// UFA! Finalmente acabou esses IF ELSE :)
 }
 
-void Computer::_LoadExitBtn()
+inline void Computer::_LoadDefenderLateral() {
+	SDL_Rect rectLateral = Global::resizeRect({ BORDER_SIZE, BORDER_SIZE, 310, Global::DESIGN_HEIGHT - 2 * BORDER_SIZE - WINDOWSBAR_SIZE });
+	m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap["WINDOWS_FIREWALL_LATERAL"].c_str()), rectLateral);
+}
+
+inline void Computer::_LoadExitBtn()
 {
 	auto button1 = std::make_unique<Button>(printRect.x + printRect.w - 30, printRect.y, 30, 30, [this]() {
-		setState("WORKSPACE2");
+		setState(WORKSPACE2);
 		});
 
 	m_ButtonMngr->addButton("workspace2Enter", std::move(button1));
 }
 
-void Computer::LoadNewScreen()
+inline void Computer::_LoadDefenderLateralBtns()
 {
-	m_LoadTexture();
-	m_LoadButtons();
+	auto button1 = std::make_unique<Button>(BORDER_SIZE, BORDER_SIZE + 120, 310, 30, [this]() {
+		setState(WINDOWSDEFENDER1);
+	});
 
-	//Foi carregado
-	m_LoadNewScreen = false;
+	auto button2 = std::make_unique<Button>(BORDER_SIZE, BORDER_SIZE + 155, 310, 30, [this]() {
+		setState(WINDOWSDEFENDERVIRUS1);
+		});
+
+	auto button3 = std::make_unique<Button>(BORDER_SIZE, BORDER_SIZE + 195, 310, 30, [this]() {
+		setState(PROTECAO_CONTAS_MENU);
+		});
+
+	auto button4 = std::make_unique<Button>(BORDER_SIZE, BORDER_SIZE + 235, 310, 30, [this]() {
+		setState(WINDOWSFIREWALL1);
+		});
+
+	auto button6 = std::make_unique<Button>(BORDER_SIZE, BORDER_SIZE + 310, 310, 30, [this]() {
+		setState(SEGURANCA_DISPOSITIVO_MENU);
+		});
+
+	auto button8 = std::make_unique<Button>(BORDER_SIZE, BORDER_SIZE + 390, 310, 30, [this]() {
+		setState(OPCOES_FAMILIA_MENU);
+		});
+
+	m_ButtonMngr->addButton("Lateral_WindowsDefenderEnter", std::move(button1));
+	m_ButtonMngr->addButton("Lateral_windowsdefenderVirusEnter", std::move(button2));
+	m_ButtonMngr->addButton("Lateral_proteContasEnter", std::move(button3));
+	m_ButtonMngr->addButton("Lateral_FirewallEnter", std::move(button4));
+	m_ButtonMngr->addButton("Lateral_SegDispoEnter", std::move(button6));
+	m_ButtonMngr->addButton("Lateral_opcoesFamilia", std::move(button8));
 }
 
 inline void Computer::m_CleanButtonMap() {
@@ -120,7 +162,7 @@ void Computer::m_LoadButtons()
 
 	// ALERTA: MUITOS IF E ELSE
 
-	if (m_ComputerState == "WORKSPACE2") {
+	if (m_ComputerState == WORKSPACE2) {
 
 		auto button1 = std::make_unique<Button>(BORDER_SIZE, BORDER_SIZE, 75, 75, [this]() {
 			m_inLixeira = true; 
@@ -147,61 +189,105 @@ void Computer::m_LoadButtons()
 		m_ButtonMngr->addButton("enterTrash", std::move(button3));
 
 	}
-	else if (m_ComputerState == "INFIREFOXY1") {
+	else if (m_ComputerState == INFIREFOX1) {
 		//No futuro haverá adição
 	}
-
-	else if (m_ComputerState == "INSETTINGS1") {
+	else if (m_ComputerState == SETTINGS1) {
 		_LoadExitBtn();
 		
 		auto button1 = std::make_unique<Button>(printRect.x + 320, 155, 970, 65, [this]() {
-			setState("INWINDOWSDEFENDER1");
+			setState(WINDOWSDEFENDER1);
 		});
 		
 		m_ButtonMngr->addButton("windowsDefenderEnter", std::move(button1));	
 	}
-	else if (m_ComputerState == "INWINDOWSDEFENDER1") {
+	else if (m_ComputerState == WINDOWSDEFENDER1) {
 		_LoadExitBtn();
+		_LoadDefenderLateralBtns();
 
-		auto button1 = std::make_unique<Button>(printRect.x + 350, 220, 230, 290, [this]() {
+		auto button1 = std::make_unique<Button>(printRect.x + 350, 220, 230, 300, [this]() {
 			setState("INWINDOWSDEFENDERVIRUS1");
 	
 		});
 
-		auto button2 = std::make_unique<Button>(printRect.x + 830, 230, 220, 275, [this]() {
-			setState("INWINDOWSFIREWALL1");
+		auto button3 = std::make_unique<Button>(printRect.x + 580, 220, 230, 300, [this]() {
+			setState(PROTECAO_CONTAS_MENU);
 		});
 
-		auto button3 = std::make_unique<Button>(printRect.x + 585, 230, 220, 275, [this]() {
-			setState("PROTECAO_CONTAS_MENU");
+		auto button2 = std::make_unique<Button>(printRect.x + 810, 220, 230, 300, [this]() {
+			setState(WINDOWSFIREWALL1);
 		});
+
+		auto button4 = std::make_unique<Button>(printRect.x + 1040, 220, 230, 300, [this]() {});
+
+		auto button5 = std::make_unique<Button>(printRect.x + 350, 540, 230, 280, [this]() {
+			setState(SEGURANCA_DISPOSITIVO_MENU);
+			});
+
+		auto button6 = std::make_unique<Button>(printRect.x + 580, 540, 230, 280, [this]() {});
+
+		auto button7 = std::make_unique<Button>(printRect.x + 810, 540, 230, 280, [this]() {});
+
+		auto button8 = std::make_unique<Button>(printRect.x + 1040, 540, 230, 280, [this]() {});
 
 		m_ButtonMngr->addButton("windowsDefenderEnter", std::move(button1));
 		m_ButtonMngr->addButton("fireWallEnter", std::move(button2));
 		m_ButtonMngr->addButton("protecaoContasEnter", std::move(button3));
-	}
-	else if (m_ComputerState == "INWINDOWSDEFENDERVIRUS1") {
-		_LoadExitBtn();
+		m_ButtonMngr->addButton("controleApp&NavegadorEnter", std::move(button4));
+		m_ButtonMngr->addButton("segurancaDispositivoEnter", std::move(button5));
+		m_ButtonMngr->addButton("desempenho&IntegridadeEnter", std::move(button6));
+		m_ButtonMngr->addButton("opcoesDeFamiliaEnter", std::move(button7));
+		m_ButtonMngr->addButton("historicoDeProtecaoEnter", std::move(button8));
 
-		auto button1 = std::make_unique<Button>(printRect.x + 350, 1000, 240, 20, [this]() {
-			setState("RANSOMWERE_MENU");
+	}
+	else if (m_ComputerState == WINDOWSDEFENDERVIRUS1) {
+		_LoadExitBtn();
+		_LoadDefenderLateralBtns();
+
+		auto button1 = std::make_unique<Button>(printRect.x + 350, 999, 240, 20, [this]() {
+			setState(RANSOMWERE_MENU);
 		});
 
 		m_ButtonMngr->addButton("ransomwererEnter", std::move(button1));
-	
 	}
-	else if(m_ComputerState == "INWINDOWSFIREWALL1") {
+	else if (m_ComputerState == WINDOWSFIREWALL1) {
 		_LoadExitBtn();
+		_LoadDefenderLateralBtns();
+
+		auto button1 = std::make_unique<Button>(BORDER_SIZE + 335, 495, 100, 40, [this]() {});
+
+		m_ButtonMngr->addButton("redeDominioEnter", std::move(button1));
 	}
-	else if (m_ComputerState == "RANSOMWERE_MENU") {
+	else if (m_ComputerState == RANSOMWERE_MENU) {
 		_LoadExitBtn();
+		_LoadDefenderLateralBtns();
 	}
-	else if (m_ComputerState == "PROTECAO_CONTAS_MENU") {
+	else if (m_ComputerState == PROTECAO_CONTAS_MENU) {
 		_LoadExitBtn();
+		_LoadDefenderLateralBtns();
+	}
+	else if (m_ComputerState == SEGURANCA_DISPOSITIVO_MENU) {
+		_LoadExitBtn();
+		_LoadDefenderLateralBtns();
+	}
+	else if (m_ComputerState == OPCOES_FAMILIA_MENU) {
+		_LoadExitBtn();
+		_LoadDefenderLateralBtns();
+
 	}
 
 	// Cabooo :)
 }
+
+inline void Computer::LoadNewScreen()
+{
+	m_LoadTexture();
+	m_LoadButtons();
+
+	//Foi carregado
+	m_LoadNewScreen = false;
+}
+
 
 // Renderizadores:
 

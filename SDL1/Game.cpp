@@ -63,6 +63,9 @@ bool Game::Init(const char* title, int width, int height) {
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
 	m_MsgManager = std::make_shared<MessageManager>();
+	
+	m_MsgManager->setImageTexture(m_Renderer, "Assets/Douglas/7.png");
+	
 	m_TextureMngr = std::make_shared<TextureMngr>(m_Renderer);
 	m_ButtonMngr = std::make_shared<ButtonMngr>(m_Renderer, m_TextureMngr);
 	m_SoundMngr = std::make_shared<SoundMngr>();
@@ -238,7 +241,6 @@ void Game::Update()
 
 void Game::controlGameMsgs(int cmd)
 {
-	m_MsgManager->setPathTex("Assets/Douglas/7.png");
 	switch (auxControlGame) {
 	
 	case 0:
@@ -256,10 +258,7 @@ void Game::controlGameMsgs(int cmd)
 		break;
 	case 1:
 		if (cmd == 0) {
-			/*m_MsgManager->render(m_Renderer, "Vim ajudar na apresentação do trabalho sobre...",
-				{ 0, 0, 0 }, 150,
-				500 , true, true);*/
-
+			
 		}
 		else if (cmd == 1) {
 			auxControlGame++;
@@ -270,23 +269,17 @@ void Game::controlGameMsgs(int cmd)
 	case 2:
 		if (cmd == 0) {
 			m_MsgManager->render(m_Renderer, "Configurações de Segurança e Privacidade no Windows", { 255, 0, 255 }, 150, 50);
-			
 		}
 		else if (cmd == 1) {
 			m_Douglas->jump();
 			auxControlGame++;
+			m_TextAnimMngr->clean();
+			m_TextAnimMngr->addTextAnimation("message4", { "Vamos começar com a introdução sobre segurança\nPara isso vamos rodar o comando start ms-settings:windowsdefender", {205, 0, 0}, 100, 500 }, true, true);
 		}
 		break;
 	
 	case 3:
 		if (cmd == 0) {
-			m_MsgManager->render(
-				m_Renderer, 
-				"Vamos começar com a introdução sobre segurança\nPara isso vamos rodar o comando start ms-settings:windowsdefender",
-				{ 205, 0, 0 },
-				100, 500, true, true
-			);
-
 		} else if (cmd == 1) {
 			runCmd("start ms-settings:windowsdefender");
 			auxControlGame++;
@@ -297,23 +290,28 @@ void Game::controlGameMsgs(int cmd)
 			});
 
 			m_ButtonMngr->addButton("computerEnter", std::move(button));
+
+			m_TextAnimMngr->clean();
+			m_TextAnimMngr->addTextAnimation("message5", { "Agora que foi dada a introdução do tema, vamos nos aprofundar mais...", {20, 10, 56}, 100, 500 }, true, true);
+			m_TextAnimMngr->addTextAnimation("message6", { "Nova missão adicionada! Pressione M para acessar o menu de missões", {255, 0, 0}, 100, 570 }, true, false);
 		}
 		break;
 
 	case 4:
 		if (cmd == 0) {
-			m_MsgManager->render(
+			/*m_MsgManager->render(
 				m_Renderer, 
-				"Agora que foi dada a introdução do tema, vamos nos aprofundar mais...",
+				"",
 				{ 0, 10, 56 },
 				100, 500, true, true
 			);
 			m_MsgManager->render(m_Renderer, "Nova missão adicionada! Pressione M para acessar o menu de missões", { 255, 0, 0 },
-				100, 550, true, false);
+				100, 550, true, false);*/
 
 		} else if (cmd == 1) {
 			m_Douglas->setCanControl(true);
 			auxControlGame++;
+			m_TextAnimMngr->clean();
 		}
 		break;
 	case 6:
