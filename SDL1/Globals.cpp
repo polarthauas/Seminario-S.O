@@ -1,6 +1,4 @@
 #include "Globals.h"
-#include <iostream>
-#include <SDL2/SDL_rect.h>
 
 int Global::windowHeight;
 int Global::windowWidth;
@@ -22,6 +20,8 @@ int Global::resizeValue(int v, Global::RESIZE_MODE mode)
 	default:
 		break;
 	}
+
+	return 0;
 }
 
 bool Global::mouseInRect(int x, int y, SDL_Rect& b) {
@@ -29,6 +29,37 @@ bool Global::mouseInRect(int x, int y, SDL_Rect& b) {
 
 	return SDL_PointInRect(&p, &b);
 }
+
+int Global::getTextWidth(const std::string& text, TTF_Font* font)
+{
+	int w, h;
+
+	TTF_SizeText(font, text.c_str(), &w, &h);
+
+    return w;
+}
+
+int Global::getTextHeight(const std::string& text, const std::string& fontPath, int fontSize)
+{
+    auto font = TTF_OpenFont(fontPath.c_str(), fontSize);
+
+	if (font == nullptr) {
+		SDL_Log("%s", TTF_GetError());
+		return 0;
+	}
+
+    int textWidth = 0;
+    int textHeight = 0;
+    if (TTF_SizeText(font, text.c_str(), &textWidth, &textHeight) != 0) {
+        SDL_Log("Erro ao calcular o tamanho do texto: %s", TTF_GetError());
+        return 0;
+    }
+
+    TTF_CloseFont(font);
+
+    return textHeight;
+}
+
 
 SDL_Rect Global::resizeRect(SDL_Rect a)
 {

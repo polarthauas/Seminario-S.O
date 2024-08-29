@@ -31,7 +31,7 @@ Notepad::Notepad(const SDL_Rect& r)
 }
 
 void Notepad::updateCursor() {
-	cursorRect.x = notepadRect.x + 20 + msgManager->getTextWidth(noteText[linhaNote].substr(0, cursorPos), 12);
+	cursorRect.x = notepadRect.x + 20 + Global::getTextWidth(noteText[linhaNote].substr(0, cursorPos), msgManager->getFont());
 	cursorRect.y = notepadRect.y + 25 * (linhaNote+1) + 2;
 }
 

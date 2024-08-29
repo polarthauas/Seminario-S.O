@@ -13,9 +13,7 @@ public:
 	explicit Fases(SDL_Renderer* rend);
 	~Fases();
 
-	void Render(SDL_Renderer* rend, Douglas* douglas);
-
-	void Collisor(const std::vector<SDL_Rect>& solids, Douglas* douglas) const;
+	void draw(SDL_Renderer* rend, Douglas* douglas);
 
 	void loadMap(int numFase); 
 

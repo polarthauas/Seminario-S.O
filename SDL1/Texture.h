@@ -1,9 +1,6 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-
-#include <string>
+#include "Globals.h"
 
 class Texture {
 public:
@@ -11,6 +8,9 @@ public:
 		loadFromFile(rend, file);
 	}
 
+	Texture(SDL_Texture* tex)
+		:_tex(tex) {}
+	
 	~Texture() {
 		clean();
 	}
@@ -20,7 +20,6 @@ public:
 
 		if (_tex == nullptr) {
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Erro ao carregar texture: %s, \n%s", file.c_str(), IMG_GetError());
-
 			return;
 		}
 
@@ -39,6 +38,5 @@ public:
 	}
 
 private:
-	SDL_Rect _texRect;
 	SDL_Texture* _tex;
 };

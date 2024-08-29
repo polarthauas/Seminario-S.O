@@ -16,5 +16,7 @@
 		<Texture id="RANSOMWERE_MENU" pathfile="Assets/Game/prints/Ransomwer.png"></Texture>
 		<Texture id="PROTECAO_CONTAS_MENU" pathfile="Assets/Game/prints/Seguranca_Conta.png"></Texture>
 		<Texture id="OPCOES_FAMILIA_MENU" pathfile="Assets/Game/prints/Opcoes_Familia.png"></Texture>
+		<Texture id="CONFIGURACOES_ANTIVIRUS" pathfile="Assets/Game/prints/configsAntiVirus.png"></Texture>
+		<Texture id="CONFIGS_SEGURANCA_DISPOSITIVO" pathfile="Assets/Game/prints/seguranca_dispositivoConfigs.png"></Texture>
 	</Computer>
 </Main>

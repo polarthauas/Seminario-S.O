@@ -17,6 +17,14 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Teste|Win32">
+      <Configuration>Teste</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Teste|x64">
+      <Configuration>Teste</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -51,6 +59,12 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Teste|Win32'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Teste|x64'">
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -104,7 +118,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Thauan\Documents\libraries\SDL2-2.30.5\include;C:\Users\Thauan\Documents\libraries\SDL2_image-2.8.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,7 +152,9 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="ButtonMngr.cpp" />
     <ClCompile Include="Computer.cpp" />
+    <ClCompile Include="DialogBox.cpp" />
     <ClCompile Include="Douglas.cpp" />
+    <ClCompile Include="FadeIn.cpp" />
     <ClCompile Include="Fases.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Globals.cpp" />
@@ -155,8 +172,10 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="ButtonMngr.h" />
     <ClInclude Include="Computer.h" />
-    <ClInclude Include="Computer_DEFINES.h" />
+    <ClInclude Include="CONFIGS.h" />
+    <ClInclude Include="DialogBox.h" />
     <ClInclude Include="Douglas.h" />
+    <ClInclude Include="FadeIn.h" />
     <ClInclude Include="Fases.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Menu.h" />
@@ -167,12 +186,12 @@
     <ClInclude Include="Notepad.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="QuestManager.h" />
-    <ClInclude Include="SoundMngr.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="TextAnimation.h" />
     <ClInclude Include="TextAnimLetterByLetter.h" />
-    <ClInclude Include="TextAnimMngr.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureMngr.h" />
+    <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Textures.xml" />

@@ -16,12 +16,7 @@
 #include "Globals.h"
 #include "Notepad.h"
 
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL.h>
-#include <string>
 #include <unordered_map>
-#include <vector>
-#include <memory>
 
 class TextureMngr;
 class Button;
@@ -75,7 +70,7 @@ public:
 	* 
 	* @return this
 	*/
-	Computer(SDL_Renderer* rend, std::shared_ptr<TextureMngr> textureMngr, std::shared_ptr<ButtonMngr> buttonmngr);
+	Computer(SDL_Renderer* rend, std::shared_ptr<TextureMngr> textureMngr, std::shared_ptr<ButtonMngr> buttonmngr, std::shared_ptr<MessageManager> msgMngr);
 
 	// Função Renderizadora principal
 	void Render();
@@ -124,14 +119,30 @@ private:
 	std::shared_ptr<TextureMngr> m_TextureMngr;
 	std::shared_ptr<ButtonMngr> m_ButtonMngr;
 
-	std::unordered_map<std::string, bool> m_LocaisJaVisitados;
+	/*
+	* 
+	* 0 - SETTINGS
+	* 1 - WINDOWSDEFENDER
+	* 2 - WINDOWSDEFENDERVIRUS
+	* 
+	*/
+	std::vector<std::string> m_LocaisJaVisitados;
+
+	bool findLocal(const std::string& local) {
+		for (const auto& l : m_LocaisJaVisitados) {
+			if (l == local) return true;
+		}
+
+		return false;
+	}
 
 	void ParseXML();
 
 	// Renderizadores
 	void RenderNotePad();
-	void m_RenderTextures();
-	void m_RenderMoldure();
+	void _RenderTextures();
+	void _RenderMoldure();
+	void _RenderSecretFolder();
 
 	// Funções de carregamento
 	// Apenas deletam o que tinha e carregam o novo
@@ -191,5 +202,5 @@ private:
 	std::unique_ptr<Notepad> m_Notepad;
 
 	// É o que exibe as mensagens na tela
-	std::unique_ptr<MessageManager> m_MsgManager;
+	std::shared_ptr<MessageManager> m_MsgManager;
 };

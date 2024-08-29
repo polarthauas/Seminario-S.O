@@ -1,6 +1,5 @@
 #include "Button.h"
 #include "Globals.h"
-#include <string>
 
 Button::Button(int x, int y, int width, int height, const std::function<void()>& onClick)
 	: m_OnClick(onClick)
@@ -15,7 +14,7 @@ Button::~Button()
 	if (m_Tex) SDL_DestroyTexture(m_Tex);
 }
 
-void Button::Update(const SDL_Event& e)
+void Button::update(const SDL_Event& e)
 {
 	if (!m_Clicable) return;
 
@@ -41,20 +40,19 @@ void Button::Update(const SDL_Event& e)
 	}
 }
 
-void Button::Draw(SDL_Renderer* rend)
+bool Button::draw(SDL_Renderer* rend)
 {
-	if (!m_Visible) return;
+	if (!m_Visible) return true;
 
 	if (m_Tex) {
-		SDL_RenderCopy(rend, m_Tex, nullptr, &m_ButtonRect);
+		if (SDL_RenderCopy(rend, m_Tex, nullptr, &m_ButtonRect) != 0)
+			return false;
 	}
 	else {
-		SDL_RenderDrawRect(rend, &m_ButtonRect);
+		if (SDL_RenderDrawRect(rend, &m_ButtonRect) != 0)
+			return false;
 	}
+
+	return true;
 }
 
-// Fundamental para os botões dinâmicos
-// Reseta a posição do botão para o original
-void Button::ResetPosition() {
-	m_ButtonRect = m_OriginRect;
-}

@@ -19,13 +19,15 @@ public:
 	void dropButton(const std::string& id);
 	void clean();
 
+	void cleanNow();
+
 	void renderAll();
 
 	void updateAll(const SDL_Event& e);
 
 	void updatePosition(const std::string& id, int x, int y);
 
-	void updateDinamicButtons(PrintTexture& p, int border_sizeX, int border_sizeY);
+	void updateDinamicButtons(PrintTexture& p);
 
 	bool find(const std::string id);
 
@@ -33,4 +35,5 @@ private:
 	SDL_Renderer* m_Rend;
 	std::shared_ptr<TextureMngr> m_TextureMngr;
 	std::unordered_map<std::string, std::unique_ptr<Button>> m_Buttons;
+	std::vector<std::string> buttonsToDelete;
 };

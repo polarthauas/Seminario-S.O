@@ -31,14 +31,26 @@
     <Filter Include="Arquivos de Origem\Managers">
       <UniqueIdentifier>{018f0bf9-4051-49e4-afe1-d67730ee2853}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Arquivos de Cabeçalho\Managers">
-      <UniqueIdentifier>{b8daa655-e6cd-47f5-9be6-f8ef938364ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Arquivos de Origem\Text">
-      <UniqueIdentifier>{0af7a0ee-d06a-43d7-b7e6-06d98a21760c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Arquivos de Cabeçalho\Text">
       <UniqueIdentifier>{ee05505d-f025-4df8-8391-adf84fba00aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Origem\Gui\Text">
+      <UniqueIdentifier>{0af7a0ee-d06a-43d7-b7e6-06d98a21760c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho\Phisycs">
+      <UniqueIdentifier>{f60f4f67-5076-4fd2-9396-96f7496d46ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho\Gui\Button">
+      <UniqueIdentifier>{e6cc8bda-f982-4f50-a118-ddb00034c0e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho\Gui\Graphics">
+      <UniqueIdentifier>{1c0b63f8-974a-41a7-87bb-1d686ba633b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Origem\Gui\Button">
+      <UniqueIdentifier>{b44f5035-9915-43ec-a72f-52ac94ff66c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arquivos de Cabeçalho\Text\Animations">
+      <UniqueIdentifier>{d6386329-78ea-4a46-90e4-f97d6b34ff56}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -69,26 +81,32 @@
     <ClCompile Include="Main.cpp">
       <Filter>Arquivos de Origem\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Arquivos de Origem\Gui</Filter>
-    </ClCompile>
     <ClCompile Include="QuestManager.cpp">
       <Filter>Arquivos de Origem\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="MessageManager.cpp">
-      <Filter>Arquivos de Origem\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="ButtonMngr.cpp">
-      <Filter>Arquivos de Origem\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="TextAnimLetterByLetter.cpp">
-      <Filter>Arquivos de Origem\Text</Filter>
+      <Filter>Arquivos de Origem\Gui\Text</Filter>
     </ClCompile>
     <ClCompile Include="SoundMngr.cpp">
       <Filter>Arquivos de Origem\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Message.cpp">
-      <Filter>Arquivos de Origem</Filter>
+      <Filter>Arquivos de Origem\Gui\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageManager.cpp">
+      <Filter>Arquivos de Origem\Gui\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="FadeIn.cpp">
+      <Filter>Arquivos de Origem\Gui\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogBox.cpp">
+      <Filter>Arquivos de Origem\Gui\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Arquivos de Origem\Gui\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonMngr.cpp">
+      <Filter>Arquivos de Origem\Gui\Button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,9 +121,6 @@
     </ClInclude>
     <ClInclude Include="mouse.h">
       <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>Arquivos de Cabeçalho\Gui</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Arquivos de Cabeçalho\Gui</Filter>
@@ -122,38 +137,47 @@
     <ClInclude Include="Game.h">
       <Filter>Arquivos de Cabeçalho\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="MessageManager.h">
-      <Filter>Arquivos de Cabeçalho\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureMngr.h">
-      <Filter>Arquivos de Cabeçalho\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="ButtonMngr.h">
-      <Filter>Arquivos de Cabeçalho\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="QuestManager.h">
-      <Filter>Arquivos de Cabeçalho\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="TextAnimMngr.h">
-      <Filter>Arquivos de Cabeçalho\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="TextAnimLetterByLetter.h">
-      <Filter>Arquivos de Cabeçalho\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="TextAnimation.h">
-      <Filter>Arquivos de Cabeçalho\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundMngr.h">
-      <Filter>Arquivos de Cabeçalho\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Computer_DEFINES.h">
+    <ClInclude Include="CONFIGS.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="Message.h">
       <Filter>Arquivos de Cabeçalho\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Arquivos de Cabeçalho\Phisycs</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2D.h">
+      <Filter>Arquivos de Cabeçalho\Phisycs</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageManager.h">
+      <Filter>Arquivos de Cabeçalho\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Arquivos de Cabeçalho\Gui\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonMngr.h">
+      <Filter>Arquivos de Cabeçalho\Gui\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureMngr.h">
+      <Filter>Arquivos de Cabeçalho\Gui\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Arquivos de Cabeçalho\Gui\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogBox.h">
+      <Filter>Arquivos de Cabeçalho\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextAnimation.h">
+      <Filter>Arquivos de Cabeçalho\Text\Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="TextAnimLetterByLetter.h">
+      <Filter>Arquivos de Cabeçalho\Text\Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="FadeIn.h">
+      <Filter>Arquivos de Cabeçalho\Text\Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestManager.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

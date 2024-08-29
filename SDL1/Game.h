@@ -5,14 +5,15 @@
 #include <memory>
 #include <vector>
 
-class Fases;
-class Menu;
-class Douglas;
-class Computer;
-class Mouse;
-
+#include "Douglas.h"
+#include "Fases.h"
+#include "Menu.h"
+#include "Computer.h"
+#include "mouse.h"
+#include "Game.h"
 
 // Managers
+
 class QuestManager;
 class MessageManager;
 class ButtonMngr;
@@ -28,7 +29,6 @@ namespace Text {
 enum class GameState {
 	INMENU,
 	INGAME,
-	INCOMPUTER
 };
 
 const SDL_Color SDL_WHITE = { 255, 255, 255 };
@@ -40,9 +40,6 @@ const SDL_Color SDL_PURPLE = { 255, 0, 255 };
 
 class Game {
 public:
-	Game();
-	~Game();
-
 	/**
 	* 
 	* Inicializa o Game
@@ -55,6 +52,10 @@ public:
 	* 
 	*/
 	bool Init(const char* title, int width, int height);
+
+	bool initSDL();
+
+	void quitSDL();
 	
 	/**
 	*
@@ -63,54 +64,46 @@ public:
 	*/
 	void cleanUp();
 
-	inline bool GetIsRunning() const { return m_IsRunning; }
+	inline bool getIsRunning() const { return m_IsRunning; }
 
-	inline GameState GetGameState() const { return m_GameState; };
-	
+	inline void exitGame() { m_IsRunning = false; }
+
 	// Funções Principais
 
 	void Event();
 	void Render();
 	void Update();
 
+	void startGame(bool fisrt = false);
+
 private:
 	
-	// Provavelmente precisa de rework
-	void controlGameMsgs(int cmd);
-
-	void runCmd(const std::string& cmd) const;
-
-	void setGameState(GameState NewState);
-
-	Uint32 frameStart{ 0 };
-	int frameTime{ 0 };
-
-	uint32_t LastFrameTime{ SDL_GetTicks() };
-
-	// Sla pq ta aqui, só tem 1 fase
-	int16_t levelNum{ 0 };
+	float deltaTime{ 0 };
+	Uint32 lastFrameTime{ 0 };
 	
 	SDL_Window* m_Window{ nullptr };
 	SDL_Renderer* m_Renderer{ nullptr };
 
-	// Ponteiros inteligentes para o fases e menu
+	// Ponteiros inteligentes
 	std::unique_ptr<Menu> m_Menu;
 	std::unique_ptr<Fases> m_Fases;
 	std::unique_ptr<Computer> m_Computer;
 	std::unique_ptr<Douglas> m_Douglas;
 	std::unique_ptr<Mouse> mouse;
-	
 	std::shared_ptr<QuestManager> m_QuestMngr;
 	std::shared_ptr<TextureMngr> m_TextureMngr;
 	std::shared_ptr<ButtonMngr> m_ButtonMngr;
+	std::shared_ptr<EventsMngr> m_EventsMngr;
 
 	std::shared_ptr<MessageManager> m_MsgManager;
 
-	GameState m_GameState{ GameState::INMENU };
+	void computerOn();
+	void computerOff();
 
-	int auxControlGame{ 0 };
+	GameState m_GameState{ GameState::INMENU };
 	
 	bool m_IsRunning{ false };
 	bool m_QuestMenu{ false };
-	bool m_TentouSair{ false };
+
+	bool m_ComputerOn{ false };
 };

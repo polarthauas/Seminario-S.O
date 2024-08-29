@@ -3,11 +3,7 @@
 #include "Globals.h"
 
 #include <map>
-#include <string>
-#include <vector>
-#include <SDL2/SDL.h>
-#include <SDl2/SDL_image.h>
-
+#include "RigidBody.h"
 
 Fases::Fases(SDL_Renderer* rend)
 {
@@ -39,7 +35,7 @@ Fases::~Fases() {
 	freeTextures();
 }
 
-void Fases::Render(SDL_Renderer* rend, Douglas* douglas)
+void Fases::draw(SDL_Renderer* rend, Douglas* douglas)
 {
 	/*
 		Renderiza a fase
@@ -74,60 +70,49 @@ void Fases::Render(SDL_Renderer* rend, Douglas* douglas)
 		}
 	}
 
-	Collisor(solidBlocks, douglas);
-}
-
-void Fases::Collisor(const std::vector<SDL_Rect>& solids, Douglas* douglas) const
-{
+	SDL_Rect playerRect = douglas->GetRect();
+	Vector2D oldPosition = douglas->getRigidBody()->oldPosition;  // Usa oldPosition para verificar a mudança
 	bool isOnGround = false;
 
-	SDL_Rect player = douglas->GetRect();
+	for (const SDL_Rect& block : solidBlocks) {
+		SDL_Rect blockRect = block;
 
-	for (const SDL_Rect& block : solids) {
-		if (SDL_HasIntersection(&player, &block)) {
-			int overlapLeft = (player.x + player.w) - block.x;
-			int overlapRight = (block.x + block.w) - player.x;
-			int overlapTop = (player.y + player.h) - block.y;
-			int overlapBottom = (block.y + block.h) - player.y;
+		// Converte as posições do RigidBody e do bloco para SDL_Rect
+		SDL_Rect player = { static_cast<int>(playerRect.x), static_cast<int>(playerRect.y),
+							playerRect.w, playerRect.h };
+
+		if (SDL_HasIntersection(&player, &blockRect)) {
+			int overlapLeft = (player.x + player.w) - blockRect.x;
+			int overlapRight = (blockRect.x + blockRect.w) - player.x;
+			int overlapTop = (player.y + player.h) - blockRect.y;
+			int overlapBottom = (blockRect.y + blockRect.h) - player.y;
 
 			int overlapX = std::min(overlapLeft, overlapRight);
 			int overlapY = std::min(overlapTop, overlapBottom);
 
 			if (overlapX < overlapY) {
-				if (player.x < block.x) {
-					douglas->setPosition(player.x - overlapX, player.y); // Colidiu pela direita
+				if (player.x < blockRect.x) {
+					douglas->getRigidBody()->position.x = blockRect.x - player.w; // Colidiu pela direita
 				}
 				else {
-					douglas->setPosition(player.x + overlapX, player.y); // Colidiu pela esquerda
+					douglas->getRigidBody()->position.x = blockRect.x + blockRect.w; // Colidiu pela esquerda
 				}
-				douglas->stopMovementX();
+				douglas->getRigidBody()->velocity.x = 0; // Zera a velocidade horizontal
 			}
 			else {
-				if (player.y < block.y) {
-					douglas->setPosition(player.x, player.y - overlapY); // Colidiu pela parte inferior
-					douglas->stopMovementY();
-
+				if (player.y < blockRect.y) {
+					douglas->getRigidBody()->position.y = blockRect.y - player.h; // Colidiu pela parte inferior
+					douglas->getRigidBody()->velocity.y = 0; // Zera a velocidade vertical
 					isOnGround = true;
 				}
 				else {
-					douglas->setPosition(player.x, player.y + overlapY); // Colidiu pela parte superior
-					douglas->stopMovementY();
+					douglas->getRigidBody()->position.y = blockRect.y + blockRect.h; // Colidiu pela parte superior
+					douglas->getRigidBody()->velocity.y = 0; // Zera a velocidade vertical
 				}
 			}
 		}
-		else
-			isOnGround = false;
-		// Aplica a gravidade se não estiver no chão
-		if (!isOnGround) {
-			douglas->setGravity(0.5);
-		}
-		else {
-			douglas->setGravity(0); // Desativa a gravidade quando está no chão
-		}
 	}
 }
-
-
 
 void Fases::loadMap(int numFase) {
 	switch (numFase)

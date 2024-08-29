@@ -37,7 +37,7 @@ int main(int argc, char**argv) {
 	
 
 	// Looping Principal
-	while (game.GetIsRunning()) {
+	while (game.getIsRunning()) {
 		game.Event();
 		game.Update();
 		game.Render();

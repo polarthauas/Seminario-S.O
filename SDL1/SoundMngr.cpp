@@ -32,3 +32,30 @@ void playSound(const std::string& path)
         }).detach();
 }
 
+void playMusic(const std::string& path)
+{
+    std::thread([path]() {
+        auto music = Mix_LoadMUS(path.c_str());
+        
+        if (music == nullptr) {
+            SDL_Log("Erro %s", Mix_GetError());
+            return;
+        }
+
+        Mix_PlayMusic(music, 0);
+
+        while (Mix_PlayingMusic()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+
+        Mix_FreeMusic(music);
+           
+
+        }).detach();
+}
+
+void pauseMusic()
+{
+    Mix_PauseMusic();
+}
+

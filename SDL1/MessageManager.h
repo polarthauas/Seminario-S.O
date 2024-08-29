@@ -1,22 +1,40 @@
+/*
+	--------------
+	Made by Thauan
+	--------------
+
+
+	Gerenciador de mensagens do game
+
+	Utiliza um sistema de filas para gerenciar as mensagens,
+	após o usuário clicar enter ele apaga o primeiro elemento e vai para o próximo (Propriedade básica das filas)
+
+
+	Gerencia as fontes do jogo **INDEVIDAMENTE**
+
+	
+
+*/
+
+
 #pragma once
 
-#include <string>
-#include <queue>
-#include <memory>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include "Globals.h"
+#include "Message.h"
 
-class Message;
+#include <queue>
 
 class MessageManager
 {
 public:
-	MessageManager();
+	MessageManager() = default;
 	~MessageManager();
 	
 	bool setFont(const std::string& fontPath, int fontSize);
 
-	void render(SDL_Renderer* rend, const std::string& message, SDL_Color color, int x, int y);
+	void render(SDL_Renderer* rend, const std::vector<std::string>& messages, const SDL_Color color, int x, int y);
+	// Função sobrecarregada para aceitar um vetor de string(várias linhas) ou apenas uma string(linha única)
+	void render(SDL_Renderer* rend, const std::string& messages, const SDL_Color color, int x, int y);
 
 	void renderAll(SDL_Renderer* rend);
 	void updateAll();
@@ -25,17 +43,21 @@ public:
 
 	void processInput(const SDL_Event& e);
 
-	void addMessage(std::unique_ptr<Message> msg);
-	
-	int getTextWidth(const std::string& text, int fontSize);
+	void addMessage(std::unique_ptr<Text::Message> msg);
 
-	void setImageTexture(SDL_Renderer* rend, const std::string& newPath);
+	void addDialogBox(std::unique_ptr<Text::Message> msg, const std::string& dialogBoxPath = "Assets/Game/dialog-box.png");
 
 	void setFontSize(uint16_t size);
 
-private:
-	std::queue<std::unique_ptr<Message>> messageQueue;
+	inline int getFontSize() const { return m_FontSize; }
 
-	SDL_Texture* _tex{ nullptr };
+	inline TTF_Font* getFont() const { return m_Font; }
+
+
+private:
+	std::queue<std::unique_ptr<Text::Message>> messageQueue;
+
+	int m_FontSize	;
+
 	TTF_Font* m_Font { nullptr };
 };

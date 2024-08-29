@@ -1,8 +1,12 @@
 /*
+	--------------
+	Made by Thauan
+	--------------
 
-	Classe pensada para gerenciar a fisica, comportamento e animação do Douglas
+	Gerencia o personagem principal Douglas""""
 
-	Namoral, tem que dar rework nisso urgente kskssk
+	Após o rework da física a classe ficou bem melhor!
+
 */
 
 #pragma once
@@ -16,6 +20,13 @@
 #define DOUGLAS_IDLE "douglasIdle"
 
 class TextureMngr;
+class RigidBody;
+
+static const float DOUGLAS_SPEED = 80.0f;
+static const int8_t DIRECTION_UP = 1;
+static const int8_t DIRECTION_DOWN = -1;
+static const int8_t DIRECTION_RIGHT = 1;
+static const int8_t DIRECTION_LEFT = -1;
 
 // Enum para os estados do jogador
 enum class DouglasState
@@ -30,26 +41,22 @@ enum class DouglasState
 
 class Douglas {
 public:
-	Douglas(SDL_Renderer* rend, std::shared_ptr<TextureMngr> texturemngr);
+	Douglas(std::shared_ptr<TextureMngr> texturemngr);
 	
 	~Douglas();
 
+	void Event(const SDL_Event& e);
+
+	void Update(float dt);
+
 	void Render();
 
-	void Update();
 	void setState(DouglasState newState);
-
-	void jump();
 
 	inline DouglasState GetState() const { return m_DouglasState; };
 	inline SDL_Rect GetRect() const { return douglasRect; };
+	RigidBody* getRigidBody() const;
 
-	// Sinceramente n sei pra q essas duas funções tão aqui, mas tão
-	void stopMovementX();
-	void stopMovementY();
-
-	// Ok, pra que? Sla
-	void setGravity(float g);
 
 	// Essa sim tem utilidade
 	void setPosition(int x, int y);
@@ -65,9 +72,6 @@ public:
 	*/
 	bool moveTo(int8_t dx, int x);
 	
-	// Verificador de eventos (sério, pq n ta dentro do update?)
-	void Event(const SDL_Event& e);
-
 	// Set para a variavel que determina se o jogador pode se mover ou não
 	void setCanControl(bool b);
 
@@ -77,43 +81,28 @@ private:
 	std::string idTex{ DOUGLAS_IDLE };
 
 	DouglasState m_DouglasState;
-
-	SDL_Renderer* m_Cntx;
-
-	std::vector<SDL_Texture*> sprites;
+	
+	std::unique_ptr<RigidBody> m_RigidBody;
 
 	SDL_Rect douglasRect;
 
 	int currentFrame{ 0 };
 	int frameTime = 100;
 	int lastFrameTime{ 0 };
-	int lastMoveTime{ 0 };
 
 	bool isJumping{ false };
 
-	int jumpDuration{ 0 };
-	int maxJumpDuration{ 5000 };
-
-	float speed = 2.1f;
-	float jumpSpeed{ 1.5f };
-
-	float gravity{ 9.98f };
-	float maxFallSpeed{ 22.0f };
-	float verticalSpeed{ 0 };
+	float jumpTime{ 0.0f };
+	float jumpForce{ 25 };
 
 	bool canControl{ true };
 
 	uint32_t jumpStartTime{ 0 };
 	uint32_t lastUpdateTime{ 0 };
 
-	int8_t input_x{ 0 };
-
-
 	std::shared_ptr<TextureMngr> m_TextureMngr;
 
 	void loadTextures();
 
 	void freeTexture();
-
-	void applyGravity();
 };
