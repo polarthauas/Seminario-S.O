@@ -48,10 +48,6 @@ bool Button::draw(SDL_Renderer* rend)
 		if (SDL_RenderCopy(rend, m_Tex, nullptr, &m_ButtonRect) != 0)
 			return false;
 	}
-	else {
-		if (SDL_RenderDrawRect(rend, &m_ButtonRect) != 0)
-			return false;
-	}
 
 	return true;
 }

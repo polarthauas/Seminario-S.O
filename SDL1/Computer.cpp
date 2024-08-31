@@ -115,7 +115,6 @@ void Computer::m_LoadTexture() {
 		SDL_Rect srcPrint = { 0, 0, 1080, 728 };
 
 		m_Textures.emplace_back(IMG_LoadTexture(m_Rend, m_PrintsMap[CONFIGURACOES_SEG_DISPOSITIVO].c_str()), rectPrint, srcPrint, true, 954);
-
 	}
 
 	// UFA! Finalmente acabou esses IF ELSE :)
@@ -317,6 +316,19 @@ void Computer::m_LoadButtons()
 		_LoadDefenderLateralBtns();
 
 		auto button1 = std::make_unique<Button>(BORDER_SIZE + 335, 495, 100, 40, [this]() {});
+
+		if (!findLocal(WINDOWSFIREWALL1)) {
+
+			auto message1 = std::make_unique<Text::Message>(
+				std::vector<std::string> {"Firewall é uma das partes mais importes no quesito proteção da rede", 
+				"Ele pode bloquear conexões e controlar a saída e entrada de dados", "Adicionando diversas regras de como funciona"},
+				SDL_RED, 0, 0, Text::MESSAGE_REPOSITION_DIALOGBOX
+
+
+			);
+
+			m_LocaisJaVisitados.push_back(WINDOWSFIREWALL1);
+		}
 
 		m_ButtonMngr->addButton("redeDominioEnter", std::move(button1));
 	}
